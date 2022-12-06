@@ -9,6 +9,10 @@ hydra-core==1.2.0
 hydra-colorlog==1.2.0
 hydra-optuna-sweeper==1.2.0
 
+# --------- audio --------- #
+audiofile==1.1.0
+pydub==0.25.1
+
 # --------- loggers --------- #
 # wandb
 # neptune-client

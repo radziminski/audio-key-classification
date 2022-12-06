@@ -16,18 +16,20 @@ clean-logs: ## Clean logs
 format: ## Run pre-commit hooks
 	pre-commit run -a
 
-sync: ## Merge changes from main branch to your current branch
-	git pull
-	git pull origin main
-
-test: ## Run not slow tests
-	pytest -k "not slow"
-
-test-full: ## Run all tests
-	pytest
-
 train: ## Train the model
 	python src/train.py
+
+test-default: ## Test model by running 1 full epoch
+	python src/train.py debug=fdr
+
+test-overfit: ## Test model by running 1 train, val and test loop, using only 1 batch
+	python src/train.py debug=overfit
+
+test-fdr: ## Test model with overfit on 1 batch
+	python src/train.py debug=fdr
+
+test-limit: ## Test model by running train on 1% of data
+	python src/train.py debug=limit
 
 debug: ## Enter debugging mode with pdb
 	#
