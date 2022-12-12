@@ -3,7 +3,7 @@
 # PROJECT_ROOT is inferred and set by pyrootutils package in `train.py` and `eval.py`
 root_dir: ${oc.env:PROJECT_ROOT}
 
-# path to data directory
+# Datasets
 data_dir: ${paths.root_dir}/data/
 
 # path to logging directory

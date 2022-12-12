@@ -1,0 +1,49 @@
+ncs:
+  _target_: src.datamodules.ncs.datamodule.NCSDataModule
+  batch_size: 128
+  num_workers: 0
+  pin_memory: False
+
+  # root_dir="data/ncs/",
+  # train_dir="train/",
+  # test_dir="validation/",
+  # train_ratio=0.7,
+  # validation_ratio=0.15,
+  # create=False,
+  # download=False,
+  # google_id=None,
+
+  # metadata:
+  root_dir: ${paths.root_dir}/data/ncs/
+  train_dir: train/
+  test_dir: validation/
+  train_ratio: 0.7
+  val_ratio: 0.15
+  interval_length: 10
+
+  create: False # Creates dataset from scratch
+  download: False # Downloads saved version from google drive with id below
+  google_id: ''
+
+  transform:
+    _target_: nnAudio.features.cqt.CQT
+    hop_length: 512
+    sr: 44100
+    verbose: False
+
+  # name: 'ncs' # NoCopyrightSounds
+  # version: 'v1'
+  # zipped_filename: 'ncs-dataset'
+  # use_for_training: True
+  # use_for_validation: True
+  # use_for_testing: False
+  # dir: ${paths.root_dir}/data/audio/ncs/
+
+giantsteps_key:
+  xxx: 1
+  # TODO
+
+giantsteps_mtg:
+  xxx:
+    1
+    # TODO

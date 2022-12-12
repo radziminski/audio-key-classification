@@ -1,39 +1,44 @@
-import contextlib
-from audiofile import AudioFile
-from pydub import AudioSegment
+import audiofile
+import os
 
 
-def split_to_intervals(interval_length, input_filename, output_filename_prefix):
-    # Open the audio file
-    with contextlib.closing(AudioFile(input_filename)) as audio_file:
-        # Get the audio parameters
-        num_channels = audio_file.channels
-        sample_width = audio_file.sample_width
-        frame_rate = audio_file.frame_rate
-        num_frames = audio_file.frames
+def split_to_intervals(iut_filename, output_filename_prefix, interval_length):
+    signal, sample_rate = audiofile.read(iut_filename)
+    is_stereo = len(signal.shape) > 1
 
-        # Calculate the duration of the audio file in seconds
-        duration = num_frames / frame_rate
+    samples_num = signal.shape[0]
+    if is_stereo:
+        samples_num = signal.shape[1]
 
-        # Calculate the number of 20-second intervals
-        num_intervals = duration // interval_length
+    interval_samples_num = interval_length * sample_rate
+    intervals_num = samples_num // interval_samples_num
 
-        # Loop through each 20-second interval
-        for i in range(num_intervals):
-            # Calculate the starting and ending frame for this interval
-            start_frame = i * 20 * frame_rate
-            end_frame = start_frame + (20 * frame_rate)
+    for interval_index in range(intervals_num):
+        interval_start = interval_index * interval_samples_num
+        interval_end = interval_start + interval_samples_num
 
-            # Read the frames from the audio file
-            frames = audio_file.read_frames(end_frame - start_frame)
+        interval = None
+        if is_stereo:
+            interval = signal.mean(axis=0)[interval_start:interval_end].reshape(1, -1)
+        else:
+            interval = signal[interval_start:interval_end].reshape(1, -1)
 
-            # Convert the frames to a pydub.AudioSegment
-            audio = AudioSegment(
-                data=frames,
-                sample_width=sample_width,
-                channels=num_channels,
-                frame_rate=frame_rate,
-            )
+        audiofile.write(
+            f"{output_filename_prefix}-{interval_index}.wav",
+            interval,
+            sample_rate,
+            normalize=True,
+        )
 
-            # Save the interval as an MP3 file
-            audio.export(f'interval{i}.mp3', format='mp3')
+    os.remove(iut_filename)
+
+
+def split_to_intervals_in_dirs(directory, interval_length):
+    for sub_directory in os.listdir(directory):
+        sub_directory_path = os.path.join(directory, sub_directory)
+        if os.path.isdir(sub_directory_path):
+            for index, filename in enumerate(os.listdir(sub_directory_path)):
+                filename_path = os.path.join(sub_directory_path, filename)
+                if os.path.isfile(filename_path):
+                    output_path = os.path.join(sub_directory_path, str(index))
+                    split_to_intervals(filename_path, output_path, interval_length)
