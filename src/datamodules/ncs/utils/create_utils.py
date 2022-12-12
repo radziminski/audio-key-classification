@@ -8,7 +8,7 @@ import zipfile
 
 
 # NCS_PAGES_NUM = 60
-NCS_PAGES_NUM = 3
+NCS_PAGES_NUM = 5
 BEATPORT_PAGES_NUM = 9
 
 NCS_DATA_URL_REGEX = r"data-url=\".*?.mp3\""

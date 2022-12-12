@@ -51,8 +51,8 @@ def main(cfg: DictConfig) -> None:
     x.prepare_data()
     x.setup()
 
-    for sample, label in x.train_dataloader():
-        print(sample.shape, label)
+    for sample, label in x.test_dataloader():
+        print(sample[0].shape, label[0])
 
 
 if __name__ == "__main__":
