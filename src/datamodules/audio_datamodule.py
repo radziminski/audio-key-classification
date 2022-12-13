@@ -56,10 +56,14 @@ class AudioDataModule(LightningDataModule):
         )
 
     def prepare_data(self):
+        print("Audio data module prepare start...")
         for preparer in self.preparers.values():
             preparer.prepare()
+        print("Audio data module prepare finished.")
 
     def setup(self, stage=None):
+        print("Audio data module setup start...")
+
         # Train / Validation
         if stage == "fit" or stage is None:
             instantiated_datasets = [
@@ -85,16 +89,29 @@ class AudioDataModule(LightningDataModule):
             dataset = ConcatDataset(instantiated_datasets)
             self.test_dataset = dataset
 
+        print("Audio data module setup finished.")
+
     def train_dataloader(self):
         return DataLoader(
-            self.train_dataset, batch_size=self.hparams.batch_size, shuffle=True
+            self.train_dataset,
+            batch_size=self.hparams.batch_size,
+            shuffle=True,
+            num_workers=self.hparams.num_workers,
+            pin_memory=self.hparams.pin_memory,
         )
 
     def val_dataloader(self):
         return DataLoader(
             self.val_dataset,
             batch_size=self.hparams.batch_size,
+            num_workers=self.hparams.num_workers,
+            pin_memory=self.hparams.pin_memory,
         )
 
     def test_dataloader(self):
-        return DataLoader(self.test_dataset, batch_size=self.hparams.batch_size)
+        return DataLoader(
+            self.test_dataset,
+            batch_size=self.hparams.batch_size,
+            num_workers=self.hparams.num_workers,
+            pin_memory=self.hparams.pin_memory,
+        )
