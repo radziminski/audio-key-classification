@@ -15,7 +15,6 @@ handle_label() {
   audio_out_path=${AUDIOPATH}$label
   audio_out_path=$(echo $audio_out_path | sed 's/[[:space:]]/-/g')
   audio_out_path=$(echo $audio_out_path | sed 's/^([^-]*-[^-]*)-.*/\$1/')
-  echo ${audio_out_path}
   mkdir -p ${audio_out_path}
 
   audio_out_path=$audio_out_path/$mp3filename
