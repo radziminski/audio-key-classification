@@ -1,6 +1,8 @@
 import torch
 import torchmetrics
 from pytorch_lightning import LightningModule
+from torchmetrics import MaxMetric, MeanMetric
+from torchmetrics.classification.accuracy import Accuracy
 from torch import argmax
 
 
@@ -13,95 +15,117 @@ class AudioClassifier(LightningModule):
         scheduler,
     ):
         super().__init__()
-        self.model = model
-        self.optimizer = optimizer
-        self.scheduler = scheduler
-        self.num_classes = model.num_classes
-        self.learning_rate = learning_rate
-        self.current_epoch_training_loss = None
 
-    def forward(self, x):
+        # this line allows to access init params with 'self.hparams' attribute
+        # also ensures init params will be stored in ckpt
+        self.save_hyperparameters(logger=False, ignore=["model"])
+
+        self.model = model
+
+        # loss function
+        self.criterion = torch.nn.CrossEntropyLoss()
+
+        # metric objects for calculating and averaging accuracy across batches
+        self.train_acc = Accuracy()
+        self.val_acc = Accuracy()
+        self.test_acc = Accuracy()
+
+        # for averaging loss across batches
+        self.train_loss = MeanMetric()
+        self.val_loss = MeanMetric()
+        self.test_loss = MeanMetric()
+
+        # for tracking best so far validation accuracy
+        self.val_acc_best = MaxMetric()
+
+    def forward(self, x: torch.Tensor):
         return self.model(x)
 
-    def common_test_valid_step(self, batch, batch_idx):
-        loss, outputs, y = self.common_step(batch)
-        preds = torch.argmax(outputs, dim=1)
-        acc = torchmetrics.functional.accuracy(
-            preds, y, num_classes=self.num_classes, task="multiclass"
-        )
-        return loss, acc
+    def on_train_start(self):
+        # by default lightning executes validation step sanity checks before training starts,
+        # so we need to make sure val_acc_best doesn't store accuracy from these checks
+        self.val_acc_best.reset()
 
-    def training_step(self, batch, batch_idx):
-        loss, _, _ = self.common_step(batch)
-        self.log(
-            "train_loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=True
-        )
-        return {"loss": loss}
-
-    @staticmethod
-    def compute_loss(x, y):
-        return torch.nn.CrossEntropyLoss(x, y)
-
-    @staticmethod
-    def mirex_score(x, y):
-        # TODO https://craffel.github.io/mir_eval/#module-mir_eval.key
-        return torch.nn.CrossEntropyLoss(x, y)
-
-    def common_step(self, batch, criterion):
+    def step(self, batch):
         x, y = batch
-        outputs = self(x)
-        loss = criterion(outputs, y)
-        return loss, outputs, y
+        logits = self.forward(x)
+        loss = self.criterion(logits, y)
+        preds = torch.argmax(logits, dim=1)
+        return loss, preds, y
 
-    def common_test_valid_step(self, batch, batch_idx):
-        loss, outputs, y = self.common_step(batch, self.mirex_score)
-        predictions = argmax(outputs, dim=1)
-        acc = torchmetrics.functional.accuracy(
-            predictions, y, num_classes=self.num_classes, task="multiclass"
-        )
-        return loss, acc
+    def training_step(self, batch, batch_idx: int):
+        loss, preds, targets = self.step(batch)
 
-    def training_step(self, batch, batch_idx):
-        loss, _, _ = self.common_step(batch, self.compute_loss)
+        # update and log metrics
+        self.train_loss(loss)
+        self.train_acc(preds, targets)
         self.log(
-            "train_loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=True
-        )
-        return {"loss": loss}
-
-    def training_epoch_end(self, outs):
-        self.current_epoch_training_loss = torch.stack([o["loss"] for o in outs]).mean()
-
-    def validation_step(self, batch, batch_idx):
-        loss, acc = self.common_test_valid_step(batch, batch_idx)
-        self.log(
-            "val_loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=True
+            "train/loss", self.train_loss, on_step=False, on_epoch=True, prog_bar=True
         )
         self.log(
-            "val_acc", acc, on_step=True, on_epoch=True, prog_bar=True, logger=True
+            "train/acc", self.train_acc, on_step=False, on_epoch=True, prog_bar=True
         )
-        return {"val_loss": loss, "val_acc": acc}
 
-    def validation_epoch_end(self, outs):
-        if hasattr(self, "current_epoch_training_loss"):
-            avg_loss = torch.stack([o["val_loss"] for o in outs]).mean()
-            self.logger.experiment.add_scalars(
-                "train and vall losses",
-                {
-                    "train": self.current_epoch_training_loss.item(),
-                    "val": avg_loss.item(),
-                },
-                self.current_epoch,
-            )
+        # we can return here dict with any tensors
+        # and then read it in some callback or in `training_epoch_end()` below
+        # remember to always return loss from `training_step()` or backpropagation will fail!
+        return {"loss": loss, "preds": preds, "targets": targets}
 
-    def test_step(self, batch, batch_idx):
-        loss, acc = self.common_test_valid_step(batch, batch_idx)
+    def training_epoch_end(self, outputs):
+        # `outputs` is a list of dicts returned from `training_step()`
+        pass
+
+    def validation_step(self, batch, batch_idx: int):
+        loss, preds, targets = self.step(batch)
+
+        # update and log metrics
+        self.val_loss(loss)
+        self.val_acc(preds, targets)
+        self.log("val/loss", self.val_loss, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("val/acc", self.val_acc, on_step=False, on_epoch=True, prog_bar=True)
+
+        return {"loss": loss, "preds": preds, "targets": targets}
+
+    def validation_epoch_end(self, outputs):
+        acc = self.val_acc.compute()  # get current val acc
+        self.val_acc_best(acc)  # update best so far val acc
+        # log `val_acc_best` as a value through `.compute()` method, instead of as a metric object
+        # otherwise metric would be reset by lightning after each epoch
+        self.log("val/acc_best", self.val_acc_best.compute(), prog_bar=True)
+
+    def test_step(self, batch, batch_idx: int):
+        loss, preds, targets = self.step(batch)
+
+        # update and log metrics
+        self.test_loss(loss)
+        self.test_acc(preds, targets)
         self.log(
-            "test_loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=True
+            "test/loss", self.test_loss, on_step=False, on_epoch=True, prog_bar=True
         )
-        self.log(
-            "test_acc", acc, on_step=True, on_epoch=True, prog_bar=True, logger=True
-        )
-        return {"test_loss": loss, "test_acc": acc}
+        self.log("test/acc", self.test_acc, on_step=False, on_epoch=True, prog_bar=True)
+
+        return {"loss": loss, "preds": preds, "targets": targets}
+
+    def test_epoch_end(self, outputs):
+        pass
 
     def configure_optimizers(self):
-        return [self.optimizer, self.scheduler]
+        """Choose what optimizers and learning-rate schedulers to use in your optimization.
+        Normally you'd need one. But in the case of GANs or similar you might have multiple.
+
+        Examples:
+            https://pytorch-lightning.readthedocs.io/en/latest/common/lightning_module.html#configure-optimizers
+        """
+        optimizer = self.hparams.optimizer(params=self.parameters())
+        if self.hparams.scheduler is not None:
+            scheduler = self.hparams.scheduler(optimizer=optimizer)
+            return {
+                "optimizer": optimizer,
+                "lr_scheduler": {
+                    "scheduler": scheduler,
+                    "monitor": "val/loss",
+                    "interval": "epoch",
+                    "frequency": 1,
+                },
+            }
+        return {"optimizer": optimizer}

@@ -16,7 +16,7 @@ scheduler:
 
 model:
   _target_: src.models.components.allconv.AllConv
-  num_feature_maps,: 2
+  num_feature_maps: 2
   dropout_rate: 0.1
   input_channels: 1
   num_classes: 24
