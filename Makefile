@@ -16,6 +16,9 @@ clean-logs: ## Clean logs
 format: ## Run pre-commit hooks
 	pre-commit run -a
 
+prepare: ## Download and prepare datasets 
+	python src/prepare.py datamodule.audio.preparers.ncs_preparer.download=True datamodule.audio.preparers.ncs_preparer.split=True
+
 train: ## Train the model
 	python src/train.py
 

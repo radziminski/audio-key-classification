@@ -16,5 +16,5 @@ ncs_preparer:
 
   create: False # Creates dataset from scratch
 
-  split: True # splits all audio files into intervals with length:
+  split: False # splits all audio files into intervals with length:
   interval_length: ${datamodule.audio.interval_length}
