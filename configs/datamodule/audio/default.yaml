@@ -4,7 +4,7 @@ num_workers: 0
 pin_memory: False
 sr: 44100
 extensions: ['.wav', '.mp3', '.flac', '.ogg']
-interval_length: 60
+interval_length: 30
 
 transform:
   _target_: nnAudio.features.cqt.CQT

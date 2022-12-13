@@ -96,8 +96,8 @@ class AudioDataModule(LightningDataModule):
             self.train_dataset,
             batch_size=self.hparams.batch_size,
             shuffle=True,
-            # num_workers=self.hparams.num_workers,
-            # pin_memory=self.hparams.pin_memory,
+            num_workers=self.hparams.num_workers,
+            pin_memory=self.hparams.pin_memory,
         )
 
     def val_dataloader(self):
@@ -113,5 +113,5 @@ class AudioDataModule(LightningDataModule):
             self.test_dataset,
             batch_size=self.hparams.batch_size,
             num_workers=self.hparams.num_workers,
-            # pin_memory=self.hparams.pin_memory,
+            pin_memory=self.hparams.pin_memory,
         )

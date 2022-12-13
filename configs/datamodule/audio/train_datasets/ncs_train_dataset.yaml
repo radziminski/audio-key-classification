@@ -3,3 +3,6 @@ ncs_train_dataset:
   root_dir: ${paths.ncs_train_dir}
   transform: ${datamodule.audio.transform}
   extensions: ${datamodule.audio.extensions}
+  device: ${trainer.device}
+  interval_length: ${datamodule.audio.interval_length}
+  sr: ${datamodule.audio.sr}
