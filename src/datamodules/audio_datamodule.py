@@ -38,7 +38,7 @@ class AudioDataModule(LightningDataModule):
         if transform is not None:
             self.spectrogram_size = (
                 1,
-                transform.n_bins,
+                84,  # transform.n_bins
                 interval_length * sr // transform.hop_length + 1,
             )
 
