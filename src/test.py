@@ -47,14 +47,23 @@ log = utils.get_pylogger(__name__)
 
 @hydra.main(version_base="1.2", config_path=root / "configs", config_name="train.yaml")
 def main(cfg: DictConfig) -> None:
-    x = hydra.utils.instantiate(cfg.datamodule.audio)
-    x.prepare_data()
-    x.setup()
+    dm = hydra.utils.instantiate(cfg.datamodule.audio)
+    dm.prepare_data()
+    dm.setup()
 
-    print(x.spectrogram_size)
+    print(dm.spectrogram_size)
 
-    for sample, label in x.test_dataloader():
+    for sample, label in dm.train_dataloader():
         print(sample[0].shape, label[0])
+
+    # for sample, label in x.test_dataloader():
+    #     print(sample[0].shape, label[0])
+
+    # for sample, label in x.test_dataloader():
+    #     print(sample[0].shape, label[0])
+
+    # for sample, label in x.test_dataloader():
+    #     print(sample[0].shape, label[0])
 
 
 if __name__ == "__main__":
