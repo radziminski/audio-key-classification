@@ -16,7 +16,10 @@ def get_file_duration(filename):
     ).stderr.decode()
 
     # Extract the duration from the output
-    duration = re.search(r"Duration: (\d{2}:\d{2}:\d{2}\.\d{2})", output).group(1)
+    duration = re.search(r"Duration: (\d{2}:\d{2}:\d{2}\.\d{2})", output)
+    if duration is None:
+        return None
+    duration = duration.group(1)
     time = datetime.datetime.strptime(duration, "%H:%M:%S.%f").time()
     # Get the total number of seconds
     seconds = time.second + 60 * time.minute
@@ -62,6 +65,11 @@ def split_to_intervals_old(filename, output_filename_prefix, interval_length):
 
 def split_to_intervals(filename, output_filename_prefix, interval_length):
     total_seconds = get_file_duration(filename)
+
+    if total_seconds is None:
+        os.remove(filename)
+        return
+
     if abs(int(total_seconds) - interval_length) < 2:
         return
 
@@ -83,7 +91,7 @@ def split_to_intervals(filename, output_filename_prefix, interval_length):
                 # Get the total number of seconds
                 seconds = get_file_duration(filepath)
 
-                if abs(int(seconds) - interval_length) > 1:
+                if seconds is None or abs(int(seconds) - interval_length) > 1:
                     os.remove(filepath)
                     rm_count += 1
 
