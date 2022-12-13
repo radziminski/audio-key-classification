@@ -67,7 +67,6 @@ def resample_old(audio, sr, target_sr):
 
 
 def resample(audio, sr, target_sr):
-    print(audio.shape)
     audio_length = len(audio)
     new_audio_length = audio_length // sr * target_sr
     resampled_audio = np.interp(
