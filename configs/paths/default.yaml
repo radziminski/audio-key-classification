@@ -6,6 +6,11 @@ root_dir: ${oc.env:PROJECT_ROOT}
 # Datasets
 data_dir: ${paths.root_dir}/data/
 
+# NCS
+ncs_root_dir: ${paths.root_dir}/data/ncs
+ncs_train_dir: ${paths.ncs_root_dir}/train/
+ncs_test_dir: ${paths.ncs_root_dir}/validation/
+
 # path to logging directory
 log_dir: ${paths.root_dir}/logs/
 

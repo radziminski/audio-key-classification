@@ -1,0 +1,5 @@
+ncs_train_dataset:
+  target: src.datamodules.common.dataset.audio_dataset_folder.AudioDatasetFolder
+  root_dir: ${paths.ncs_train_dir}
+  transform: ${datamodule.audio.transform}
+  extensions: ${datamodule.audio.extensions}

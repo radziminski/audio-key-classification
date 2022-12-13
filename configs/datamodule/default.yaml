@@ -2,10 +2,9 @@ global_sr: 44100
 global_extensions: ['wav', 'flac', 'mp3', 'ogg']
 
 defaults:
-  - ncs.yaml
+  - audio: default.yaml
   - mnist.yaml
   - _self_
 
-ncs:
+audio:
   sr: ${datamodule.global_sr}
-  # extensions: ${datamodule.global_extensions}

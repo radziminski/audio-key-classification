@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 import zipfile
 
 
-NCS_PAGES_NUM = 3
+NCS_PAGES_NUM = 5
 BEATPORT_PAGES_NUM = 9
 
 NCS_DATA_URL_REGEX = r"data-url=\".*?.mp3\""
@@ -200,19 +200,9 @@ def download_ncs_songs(destination_dir):
         song_folder = os.path.join(destination_dir, song_key_parsed)
         song_name = get_song_name(artist, name)
         song_path = os.path.join(song_folder, song_name)
-        song_train_path = os.path.join(
-            destination_dir, "train", song_key_parsed, song_name
-        )
-        song_test_path = os.path.join(
-            destination_dir, "validation", song_key_parsed, song_name
-        )
 
         # Checking if song was already downloaded or splitted to train/test dirs
-        if (
-            os.path.exists(song_path)
-            or os.path.exists(song_train_path)
-            or os.path.exists(song_test_path)
-        ):
+        if os.path.exists(song_path):
             continue
 
         if not os.path.exists(song_folder):
@@ -225,9 +215,7 @@ def download_ncs_songs(destination_dir):
     print(f"In total {all_count} songs.")
 
 
-def split_files_to_train_test(root_dir, train_path, test_path, train_ratio=0.85):
-    train_dir = os.path.join(root_dir, train_path)
-    test_dir = os.path.join(root_dir, test_path)
+def split_files_to_train_test(root_dir, train_dir, test_dir, train_ratio=0.85):
     files = []
 
     for sub_directory in os.listdir(root_dir):

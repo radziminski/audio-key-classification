@@ -5,40 +5,55 @@ from torch.utils.data import DataLoader, ConcatDataset, random_split
 from src.utils.hydra import instantiate_delayed
 
 
-class NCSDataModule(LightningDataModule):
+class AudioDataModule(LightningDataModule):
     def __init__(
         self,
         batch_size=64,
         num_workers: int = 0,
         pin_memory: bool = False,
-        root_dir="data/ncs/",
-        train_dir="data/ncs/train/",
-        test_dir="data/ncs/validation/",
-        train_ratio=0.7,
+        train_ratio=0.85,
         val_ratio=0.15,
         sr=44100,
+        interval_length=20,
+        extensions=[],
         transform=None,
-        preparers={},
-        datasets={},
+        preparers=None,
+        train_datasets=None,
+        test_datasets=None,
     ):
         super().__init__()
 
         # this line allows to access init params with 'self.hparams' attribute
         # also ensures init params will be stored in ckpt
         self.save_hyperparameters(
-            logger=False, ignore=["transform", "preparers", "datasets"]
+            logger=False, ignore=["preparers", "datasets", "transform"]
         )
-        self.transform = transform
-        self.preparers = preparers
-        self._parse_datasets(datasets)
+        self.preparers = preparers if preparers is not None else []
+        self._parse_datasets(train_datasets, test_datasets)
 
         # Dataset info
-        self.spectrogram_size = (1, 84, 1723)
         self.num_classes = 24
 
-    def _parse_datasets(self, datasets_config):
-        self.train_datasets_configs = list(datasets_config.train.values())
-        self.test_datasets_configs = list(datasets_config.test.values())
+        self.spectrogram_size = None
+        if transform is not None:
+            self.spectrogram_size = (
+                1,
+                transform.n_bins,
+                interval_length * sr // transform.hop_length + 1,
+            )
+
+    def _parse_datasets(self, train_datasets_configs, test_datasets_configs):
+
+        self.train_datasets_configs = (
+            list(train_datasets_configs.values())
+            if train_datasets_configs is not None
+            else []
+        )
+        self.test_datasets_configs = (
+            list(test_datasets_configs.values())
+            if test_datasets_configs is not None
+            else []
+        )
 
     def prepare_data(self):
         for preparer in self.preparers.values():
@@ -76,7 +91,10 @@ class NCSDataModule(LightningDataModule):
         )
 
     def val_dataloader(self):
-        return DataLoader(self.val_dataset, batch_size=self.hparams.batch_size)
+        return DataLoader(
+            self.val_dataset,
+            batch_size=self.hparams.batch_size,
+        )
 
     def test_dataloader(self):
         return DataLoader(self.test_dataset, batch_size=self.hparams.batch_size)

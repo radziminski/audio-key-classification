@@ -40,11 +40,17 @@ def split_to_intervals(filename, output_filename_prefix, interval_length):
     os.remove(filename)
 
 
-def split_to_intervals_in_dirs(directory, interval_length):
+def split_to_intervals_in_dirs(directory, interval_length, extensions):
     for sub_directory in os.listdir(directory):
         sub_directory_path = os.path.join(directory, sub_directory)
         if os.path.isdir(sub_directory_path):
             for index, filename in enumerate(os.listdir(sub_directory_path)):
+                parts = filename.split(".")
+                extension = "." + parts[-1]
+
+                if not extension in extensions:
+                    continue
+
                 filename_path = os.path.join(sub_directory_path, filename)
                 if os.path.isfile(filename_path):
                     output_path = os.path.join(sub_directory_path, str(index))
@@ -63,6 +69,7 @@ def common_audio_transform(sample, transform, target_sr):
 
     # Resample audio to target_sr (44100) sample rate, so that all inputs have the same size
     if sr != target_sr:
+        print(f"Resampling from {sr} to {target_sr}...")
         audio = resample(audio, sr, target_sr)
 
     audio_tensor = torch.tensor(audio)
