@@ -9,10 +9,12 @@ class AudioDatasetFolder(torchvision.datasets.DatasetFolder):
         transform=None,
         sr=44100,
         extensions=("wav"),
-        device="cuda",
+        device="gpu",
         interval_length=20,
     ):
         self.root = root_dir
+
+        device = "cuda" if device == "gpu" else device
 
         target_length = interval_length * sr
         dataset_transform = lambda x: common_audio_transform(

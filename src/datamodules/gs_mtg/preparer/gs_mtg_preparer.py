@@ -2,17 +2,18 @@ import os
 
 from src.utils.audio import split_to_intervals_in_dirs
 from src.datamodules.common.preparer.preparer import Preparer
+from src.utils.download import gdown_and_unzip
 
 
 class GS_MTG_Preparer(Preparer):
     def __init__(
         self,
         data_dir="data/",
-        root_dir="data/ncs/",
+        root_dir="data/gs_mtg/",
         train_ratio=0.85,
         download=False,
         google_id="",
-        zip_filename="ncs.zip",
+        zip_filename="gs_mtg.zip",
         interval_length=20,
         split=False,
         extensions=[".wav", ".mp3"],
@@ -34,9 +35,10 @@ class GS_MTG_Preparer(Preparer):
             os.mkdir(self.data_dir)
 
         if self.download:
-            print("Downloading NCS dataset from google drive...")
+            print("Downloading Giantsteps MTG dataset from google drive...")
+            gdown_and_unzip(self.google_id, self.zip_filename, self.data_dir)
 
-        if (self.download or self.create) and not self.split:
+        if self.download and not self.split:
             print(
                 "Warning: you disabled splitting while creating.downloading the files. Model might not work properly."
             )
@@ -44,9 +46,6 @@ class GS_MTG_Preparer(Preparer):
         if self.split:
             print("Splitting into intervals...")
             split_to_intervals_in_dirs(
-                self.train_dir, self.interval_length, self.extensions
-            )
-            split_to_intervals_in_dirs(
-                self.test_dir, self.interval_length, self.extensions
+                self.root_dir, self.interval_length, self.extensions
             )
             print("Splitting into intervals finished")

@@ -6,6 +6,7 @@ import os
 from sklearn.model_selection import train_test_split
 import zipfile
 
+from src.utils.music import map_scale_to_bemol
 
 NCS_PAGES_NUM = 5
 BEATPORT_PAGES_NUM = 9
@@ -20,8 +21,6 @@ BEATPORT_KEY_REGEX = r"<p class=\"buk-track-key\">.*?<\/p>"
 
 BEATPORT_DATA_FILE = "beatport.json"
 
-NOTES_LIST = ["C", "D", "E", "F", "G", "A", "B"]
-
 
 def get_note_scales(note):
     scales = [f"${note} maj", f"${note} min"]
@@ -30,27 +29,6 @@ def get_note_scales(note):
         scales.append(f"${note}b maj", f"${note}b min")
 
     return scales
-
-
-def map_scale_to_bemol(scale):
-    if not "♯" in scale:
-        return scale
-
-    note = scale[0]
-    scale_type = scale.split(" ")[1]
-    note_index = NOTES_LIST.index(note)
-
-    new_note = "C"
-    if note_index < len(NOTES_LIST) - 1:
-        new_note = NOTES_LIST[note_index + 1]
-
-    new_scale = f"{new_note}b"
-    if new_note == "C":
-        new_scale = "C"
-    elif new_note == "F":
-        new_scale = "E"
-
-    return f"{new_scale} {scale_type}"
 
 
 def download_file(url, destination):

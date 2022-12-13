@@ -1,9 +1,9 @@
 import os
 
-from .utils.download import download_ncs_dataset
 from .utils.create import create_ncs_dataset
 from src.utils.audio import split_to_intervals_in_dirs
 from src.datamodules.common.preparer.preparer import Preparer
+from src.utils.download import gdown_and_unzip
 
 
 class NCSPreparer(Preparer):
@@ -43,7 +43,7 @@ class NCSPreparer(Preparer):
 
         if self.download:
             print("Downloading NCS dataset from google drive...")
-            download_ncs_dataset(self.google_id, self.zip_filename, self.data_dir)
+            gdown_and_unzip(self.google_id, self.zip_filename, self.data_dir)
         elif self.create:
             print("Creating NCS dataset from scratch...")
             create_ncs_dataset(
