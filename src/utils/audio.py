@@ -3,6 +3,7 @@ import os
 import scipy.signal
 import torch
 import audiofile
+import numpy as np
 
 
 def split_to_intervals(filename, output_filename_prefix, interval_length):
@@ -57,9 +58,21 @@ def split_to_intervals_in_dirs(directory, interval_length, extensions):
                     split_to_intervals(filename_path, output_path, interval_length)
 
 
-def resample(audio, sr, target_sr):
+# old resample function that was too slow
+def resample_old(audio, sr, target_sr):
     number_of_samples = round(len(audio) * float(target_sr) / sr)
     resampled_audio = scipy.signal.resample(audio, number_of_samples)
+
+    return resampled_audio
+
+
+def resample(audio, sr, target_sr):
+    print(audio.shape)
+    audio_length = len(audio)
+    new_audio_length = audio_length // sr * target_sr
+    resampled_audio = np.interp(
+        np.linspace(0, 1, new_audio_length), np.linspace(0, 1, audio_length), audio
+    )
 
     return resampled_audio
 
@@ -69,10 +82,9 @@ def common_audio_transform(sample, transform, target_sr):
 
     # Resample audio to target_sr (44100) sample rate, so that all inputs have the same size
     if sr != target_sr:
-        print(f"Resampling from {sr} to {target_sr}...")
         audio = resample(audio, sr, target_sr)
 
-    audio_tensor = torch.tensor(audio)
+    audio_tensor = torch.tensor(audio, dtype=torch.float)
 
     if transform is not None and callable(transform):
         spectrogram = transform(audio_tensor)
