@@ -48,6 +48,7 @@ log = utils.get_pylogger(__name__)
 @hydra.main(version_base="1.2", config_path=root / "configs", config_name="train.yaml")
 def main(cfg: DictConfig) -> None:
     x = hydra.utils.instantiate(cfg.datamodule.ncs)
+    # # print(cfg.datamodule.extensions)
     x.prepare_data()
     x.setup()
 

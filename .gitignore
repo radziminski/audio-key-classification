@@ -50,6 +50,7 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+outputs/
 
 # Translations
 *.mo
@@ -143,6 +144,7 @@ dmypy.json
 *.h5
 *.tar
 *.tar.gz
+*.zip
 
 # Lightning-Hydra-Template
 configs/local/default.yaml

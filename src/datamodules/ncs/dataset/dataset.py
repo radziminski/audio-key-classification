@@ -1,14 +1,15 @@
 import torchvision.datasets
 import audiofile
 import torch
-import scipy.signal
+from src.utils.audio import resample
 
 
-def audio_transform(sample, transform):
+def audio_transform(sample, transform, target_sr):
     audio, sr = sample
-    if sr != 44100:
-        number_of_samples = round(len(audio) * float(44100) / sr)
-        audio = scipy.signal.resample(audio, number_of_samples)
+
+    # Resample audio to target_sr (44100) sample rate, so that all inputs have the same size
+    if sr != target_sr:
+        audio = resample(audio, sr, target_sr)
 
     audio_tensor = torch.tensor(audio)
 
@@ -20,10 +21,12 @@ def audio_transform(sample, transform):
 
 
 class NCSDataset(torchvision.datasets.DatasetFolder):
-    def __init__(self, root_dir="./data/ncs", loader=audiofile.read, transform=None):
+    def __init__(
+        self, root_dir="./data/ncs", loader=audiofile.read, transform=None, sr=44100
+    ):
         self.root = root_dir
 
-        dataset_transform = lambda x: audio_transform(x, transform)
+        dataset_transform = lambda x: audio_transform(x, transform, sr)
 
         super(NCSDataset, self).__init__(
             root_dir, loader=loader, extensions=(".wav"), transform=dataset_transform

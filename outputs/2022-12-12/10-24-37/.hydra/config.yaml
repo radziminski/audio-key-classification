@@ -1,5 +1,0 @@
-task_name: datasets
-version: 1.0
-download: 'no'
-url: ''
-zipped_filename: ncs-songs-dataset.zip

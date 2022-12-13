@@ -1,10 +1,8 @@
 from typing import Any, Dict, Optional, Tuple
-import os
 from pytorch_lightning import LightningDataModule
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader, ConcatDataset, random_split
 
-from .utils.prepare import prepare_ncs_dataset
-from .dataset.dataset import NCSDataset
+from src.utils.hydra import instantiate_delayed
 
 
 class NCSDataModule(LightningDataModule):
@@ -14,45 +12,46 @@ class NCSDataModule(LightningDataModule):
         num_workers: int = 0,
         pin_memory: bool = False,
         root_dir="data/ncs/",
-        train_dir="train/",
-        test_dir="validation/",
+        train_dir="data/ncs/train/",
+        test_dir="data/ncs/validation/",
         train_ratio=0.7,
         val_ratio=0.15,
-        create=False,
-        download=False,
-        google_id=None,
-        interval_length=20,
+        sr=44100,
         transform=None,
+        preparers={},
+        datasets={},
     ):
         super().__init__()
 
         # this line allows to access init params with 'self.hparams' attribute
         # also ensures init params will be stored in ckpt
-        self.save_hyperparameters(logger=False, ignore=["transform"])
+        self.save_hyperparameters(
+            logger=False, ignore=["transform", "preparers", "datasets"]
+        )
         self.transform = transform
+        self.preparers = preparers
+        self._parse_datasets(datasets)
 
         # Dataset info
         self.spectrogram_size = (1, 84, 1723)
         self.num_classes = 24
 
+    def _parse_datasets(self, datasets_config):
+        self.train_datasets_configs = list(datasets_config.train.values())
+        self.test_datasets_configs = list(datasets_config.test.values())
+
     def prepare_data(self):
-        prepare_ncs_dataset(
-            root_dir=self.hparams.root_dir,
-            train_dir=self.hparams.train_dir,
-            test_dir=self.hparams.test_dir,
-            train_ratio=self.hparams.train_ratio,
-            download=self.hparams.download,
-            create=self.hparams.create,
-            interval_length=self.hparams.interval_length,
-        )
+        for preparer in self.preparers.values():
+            preparer.prepare()
 
     def setup(self, stage=None):
         # Train / Validation
         if stage == "fit" or stage is None:
-            dataset = NCSDataset(
-                root_dir=os.path.join(self.hparams.root_dir, self.hparams.train_dir),
-                transform=self.transform,
-            )
+            instantiated_datasets = [
+                instantiate_delayed(config) for config in self.train_datasets_configs
+            ]
+
+            dataset = ConcatDataset(instantiated_datasets)
             self.train_val_dataset = dataset
             train_val_ratio = self.hparams.train_ratio / (
                 self.hparams.train_ratio + self.hparams.val_ratio
@@ -64,10 +63,11 @@ class NCSDataModule(LightningDataModule):
 
         # Test
         if stage == "test" or stage is None:
-            dataset = NCSDataset(
-                root_dir=os.path.join(self.hparams.root_dir, self.hparams.test_dir),
-                transform=self.transform,
-            )
+            instantiated_datasets = [
+                instantiate_delayed(config) for config in self.test_datasets_configs
+            ]
+
+            dataset = ConcatDataset(instantiated_datasets)
             self.test_dataset = dataset
 
     def train_dataloader(self):

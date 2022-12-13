@@ -1,0 +1,45 @@
+ncs:
+  _target_: src.datamodules.ncs.datamodule.NCSDataModule
+  batch_size: 128
+  num_workers: 0
+  pin_memory: False
+
+  root_dir: ${paths.root_dir}/data/ncs
+  train_dir: ${datamodule.ncs.root_dir}/train/
+  test_dir: ${datamodule.ncs.root_dir}/validation/
+  train_ratio: 0.7
+  val_ratio: 0.15
+  sr: None
+
+  transform:
+    _target_: nnAudio.features.cqt.CQT
+    hop_length: 512
+    sr: ${datamodule.ncs.sr}
+    verbose: False
+
+  datasets:
+    train:
+      ncs_train_dataset:
+        target: src.datamodules.common.dataset.audio_dataset_folder.AudioDatasetFolder
+        root_dir: ${datamodule.ncs.train_dir}
+        transform: ${datamodule.ncs.transform}
+        extensions: ${datamodule.global_extensions}
+
+    test:
+      ncs_test_dataset:
+        target: src.datamodules.common.dataset.audio_dataset_folder.AudioDatasetFolder
+        root_dir: ${datamodule.ncs.test_dir}
+        transform: ${datamodule.ncs.transform}
+        extensions: ${datamodule.global_extensions}
+
+  preparers:
+    ncs_preparer:
+      _target_: src.datamodules.ncs.preparer.preparer.NCSPreparer
+      root_dir: ${datamodule.ncs.root_dir}
+      train_dir: ${datamodule.ncs.train_dir}
+      test_dir: ${datamodule.ncs.test_dir}
+      train_ratio: 0.85
+      download: False # Downloads saved version from google drive with id below
+      google_id: '1XF7lCWlr8RjSeCUZ2FBaGkSdTNRxuWLV'
+      create: False # Creates dataset from scratch
+      interval_length: 10
