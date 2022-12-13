@@ -43,8 +43,12 @@ transform:
 
 defaults:
   - test_datasets:
-      - ncs_test_dataset.yaml
+      - ncs_test_dataset
+      - gs_key_dataset
   - train_datasets:
-      - ncs_train_dataset.yaml
+      - ncs_train_dataset
+      - gs_mtg_dataset
   - preparers:
       - ncs_preparer
+      - gs_mtg_preparer
+      - gs_key_preparer

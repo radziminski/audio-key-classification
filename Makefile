@@ -17,7 +17,28 @@ format: ## Run pre-commit hooks
 	pre-commit run -a
 
 prepare: ## Download and prepare datasets 
-	python src/prepare.py datamodule.audio.preparers.ncs_preparer.download=True datamodule.audio.preparers.ncs_preparer.split=True
+	python src/prepare.py \
+		datamodule.audio.preparers.ncs_preparer.download=True \
+		datamodule.audio.preparers.ncs_preparer.split=True \
+		datamodule.audio.preparers.gs_mtg_preparer.download=True \
+		datamodule.audio.preparers.gs_mtg_preparer.split=True
+		datamodule.audio.preparers.gs_key_preparer.download=True \
+		datamodule.audio.preparers.gs_key_preparer.split=True
+
+prepare-ncs: ## Download and prepare NCS dataset
+	python src/prepare.py \
+		datamodule.audio.preparers.ncs_preparer.download=True \
+		datamodule.audio.preparers.ncs_preparer.split=True \
+
+prepare-gs-mtg: ## Download and prepare GS MTG dataset
+	python src/prepare.py \
+		datamodule.audio.preparers.gs_mtg_preparer.download=True \
+		datamodule.audio.preparers.gs_mtg_preparer.split=True
+
+prepare-gs-key: ## Download and prepare GS KEY dataset
+	python src/prepare.py \
+		datamodule.audio.preparers.gs_key_preparer.download=True \
+		datamodule.audio.preparers.gs_key_preparer.split=True
 
 train: ## Train the model
 	python src/train.py

@@ -51,19 +51,21 @@ def main(cfg: DictConfig) -> None:
     dm.prepare_data()
     dm.setup()
 
-    print(dm.spectrogram_size)
+    print("Input (spectrogram) size: ", dm.spectrogram_size)
 
-    for sample, label in dm.train_dataloader():
+    print("Some train tensors: ")
+    for index, entry in enumerate(dm.train_dataloader()):
+        sample, label = entry
         print(sample[0].shape, label[0])
+        if index > 4:
+            break
 
-    # for sample, label in x.test_dataloader():
-    #     print(sample[0].shape, label[0])
-
-    # for sample, label in x.test_dataloader():
-    #     print(sample[0].shape, label[0])
-
-    # for sample, label in x.test_dataloader():
-    #     print(sample[0].shape, label[0])
+    print("Some test tensors: ")
+    for index, entry in enumerate(dm.test_dataloader()):
+        sample, label = entry
+        print(sample[0].shape, label[0])
+        if index > 4:
+            break
 
 
 if __name__ == "__main__":

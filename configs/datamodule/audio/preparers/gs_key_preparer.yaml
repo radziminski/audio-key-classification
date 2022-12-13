@@ -1,0 +1,16 @@
+gs_key_preparer:
+  _target_: src.datamodules.gs_key.preparer.gs_key_preparer.GS_KeyPreparer
+  data_dir: ${paths.data_dir}
+  root_dir: ${paths.gs_key_root_dir}
+
+  extensions: ${datamodule.audio.extensions}
+
+  download: False # Downloads saved version from google drive with id below
+
+  google_id: '1DxeJVScOE7wnXFBQ1XZHrBlGmZEZnTM6'
+  keys_google_id: '1CtU9JrK413Q_6VeQP-H-1R-n2oP3wAYr' # small version 400MB
+  zip_filename: 'data/gs_key-dataset.zip'
+  keys_zip_filename: 'data/gs_key-dataset-keys.zip'
+
+  split: False # splits all audio files into intervals with length:
+  interval_length: ${datamodule.audio.interval_length}

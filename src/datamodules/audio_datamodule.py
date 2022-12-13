@@ -71,6 +71,8 @@ class AudioDataModule(LightningDataModule):
             ]
 
             dataset = ConcatDataset(instantiated_datasets)
+            print(f"Train dataset size: {len(dataset)}")
+
             self.train_val_dataset = dataset
             train_val_ratio = self.hparams.train_ratio / (
                 self.hparams.train_ratio + self.hparams.val_ratio
@@ -87,6 +89,8 @@ class AudioDataModule(LightningDataModule):
             ]
 
             dataset = ConcatDataset(instantiated_datasets)
+            print(f"Test dataset size: {len(dataset)}")
+
             self.test_dataset = dataset
 
         print("Audio data module setup finished.")

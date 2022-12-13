@@ -1,0 +1,8 @@
+gs_key_dataset:
+  target: src.datamodules.common.dataset.audio_dataset_folder.AudioDatasetFolder
+  root_dir: ${paths.gs_key_root_dir}
+  transform: ${datamodule.audio.transform}
+  extensions: ${datamodule.audio.extensions}
+  device: ${trainer.accelerator}
+  interval_length: ${datamodule.audio.interval_length}
+  sr: ${datamodule.audio.sr}
