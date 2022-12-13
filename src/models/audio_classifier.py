@@ -5,9 +5,17 @@ from torch import argmax
 
 
 class AudioClassifier(LightningModule):
-    def __init__(self, model, learning_rate):
+    def __init__(
+        self,
+        model,
+        learning_rate,
+        optimizer,
+        scheduler,
+    ):
         super().__init__()
         self.model = model
+        self.optimizer = optimizer
+        self.scheduler = scheduler
         self.num_classes = model.num_classes
         self.learning_rate = learning_rate
         self.current_epoch_training_loss = None
@@ -96,5 +104,4 @@ class AudioClassifier(LightningModule):
         return {"test_loss": loss, "test_acc": acc}
 
     def configure_optimizers(self):
-        optimizer = torch.optim.SGD(self.parameters(), lr=self.learning_rate)
-        return [optimizer]
+        return [self.optimizer, self.scheduler]
