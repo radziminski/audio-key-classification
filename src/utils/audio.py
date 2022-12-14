@@ -181,7 +181,7 @@ def common_audio_transform(sample, transform, target_sr, target_length, device):
     if len(audio) > target_length:
         audio = audio[:target_length]
 
-    new_audio = torch.tensor(audio, device=device)
+    new_audio = audio.clone().to(device)
     if transform is not None and callable(transform):
         spectrogram = transform.to(device)(new_audio)
         return spectrogram
