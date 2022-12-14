@@ -30,6 +30,8 @@ def sort_files_to_dirs(audio_dir, keys_dir, dataset_dir):
         if not os.path.isdir(scale_dir_full):
             os.mkdir(scale_dir_full)
 
+    songs_with_no_class = 0
+
     for file_index, key_file in enumerate(os.listdir(keys_dir)):
         if not key_file.endswith("txt"):
             continue
@@ -55,4 +57,7 @@ def sort_files_to_dirs(audio_dir, keys_dir, dataset_dir):
                     break
 
             if not has_class:
+                songs_with_no_class += 1
                 os.remove(audio_filepath)
+
+    print(f"Skipped {songs_with_no_class} files without classes")

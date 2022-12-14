@@ -18,7 +18,7 @@ def download(id, filename, download_type="google"):
 
 
 def download_and_unzip(id, filename, destination, download_type="google"):
-    download(id, filename, download_type=download_type)
+    # download(id, filename, download_type=download_type)
 
     zip = zipfile.ZipFile(filename)
     zip.extractall(destination)

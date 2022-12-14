@@ -52,6 +52,8 @@ def sort_files_to_dirs(annotations_file, audio_dir, dataset_dir):
         if not os.path.isdir(scale_dir_full):
             os.mkdir(scale_dir_full)
 
+    songs_with_no_class = 0
+
     with open(annotations_file, "r") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter="\t")
         for index, row in enumerate(csv_reader):
@@ -77,4 +79,7 @@ def sort_files_to_dirs(annotations_file, audio_dir, dataset_dir):
                     break
 
             if not has_class:
+                songs_with_no_class += 1
                 os.remove(filepath)
+
+    print(f"Skipped {songs_with_no_class} files without classes")

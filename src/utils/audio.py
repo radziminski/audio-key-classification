@@ -70,6 +70,7 @@ def split_to_intervals(filename, output_filename_prefix, interval_length):
         os.remove(filename)
         return
 
+    # Skipping files with correct length
     if abs(int(total_seconds) - interval_length) < 2:
         return
 
@@ -91,6 +92,7 @@ def split_to_intervals(filename, output_filename_prefix, interval_length):
                 # Get the total number of seconds
                 seconds = get_file_duration(filepath)
 
+                # Removing last part of song with wrong duration
                 if seconds is None or abs(int(seconds) - interval_length) > 1:
                     os.remove(filepath)
                     rm_count += 1
@@ -112,7 +114,7 @@ def split_to_intervals_in_dirs(directory, interval_length, extensions):
 
                 filename_path = os.path.join(sub_directory_path, filename)
                 if os.path.isfile(filename_path):
-                    output_path = os.path.join(sub_directory_path, str(index))
+                    output_path = os.path.join(sub_directory_path, f"akc-split-{index}")
                     split_to_intervals(filename_path, output_path, interval_length)
 
 
