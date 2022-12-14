@@ -5,6 +5,7 @@ pin_memory: False
 sr: 44100
 extensions: ['.wav', '.mp3', '.flac', '.ogg']
 interval_length: 30
+loader_type: 'audiofile' # 'audiofile' or 'torch'
 
 transform:
   _target_: nnAudio.features.cqt.CQT

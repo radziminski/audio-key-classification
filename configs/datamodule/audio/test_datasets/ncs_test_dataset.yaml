@@ -6,3 +6,4 @@ ncs_test_dataset:
   device: ${trainer.accelerator}
   interval_length: ${datamodule.audio.interval_length}
   sr: ${datamodule.audio.sr}
+  loader_type: ${datamodule.audio.loader_type}

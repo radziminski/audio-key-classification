@@ -16,6 +16,7 @@ class AudioDataModule(LightningDataModule):
         sr=44100,
         interval_length=20,
         extensions=[],
+        loader_type="torch",
         transform=None,
         preparers=None,
         train_datasets=None,

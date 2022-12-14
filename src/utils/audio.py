@@ -167,8 +167,9 @@ def common_audio_transform(sample, transform, target_sr, target_length, device):
         audio = audio.mean(axis=0)
 
     # Resample audio to target_sr (44100) sample rate, so that all inputs have the same size
-    # if sr != target_sr:
-    #     audio = resample(audio, sr, target_sr)
+    if sr != target_sr:
+        resampler = torchaudio.transforms.Resample(sr, target_sr)
+        audio = resampler(audio)
 
     # FFMPEG does not cut the files into intervals perfectly - there are some minor
     # correction needed:
@@ -178,22 +179,23 @@ def common_audio_transform(sample, transform, target_sr, target_length, device):
     if len(audio) > target_length:
         audio = audio[:target_length]
 
-    # TODO: investigate why device is needed here
-    audio_tensor = audio.to(device)
-
     if transform is not None and callable(transform):
-        spectrogram = transform.to(device)(audio_tensor)
+        spectrogram = transform.to(device)(audio)
         return spectrogram
 
     return audio
 
 
-def common_audio_loader(file):
-    return torchaudio.load(file, format="mp3")
+def common_audio_loader(file, type="torch", device="cuda"):
+    if type == "torch":
+        audio, sr = torchaudio.load(file, format="mp3")
+        audio.to(device)
+        return audio, sr
 
-
-def common_audio_loader_old(file):
-    return audiofile.read(file)
+    audio, sr = audiofile.read(file)
+    audio = torch.tensor(audio, dtype=torch.float, device=device)
+    audio.to(device)
+    return audio, sr
 
 
 def try_delete_dir(dir):
