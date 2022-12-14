@@ -3,7 +3,7 @@ import gdown
 
 from src.utils.audio import split_to_intervals_in_dirs, try_delete_dir
 from src.datamodules.common.preparer.preparer import Preparer
-from src.utils.download import gdown_and_unzip
+from src.utils.download import download_and_unzip, download
 from .utils.sort import sort_files_to_dirs
 
 
@@ -13,8 +13,9 @@ class GS_MTGPreparer(Preparer):
         data_dir="data/",
         root_dir="data/gs_mtg/",
         download=False,
-        google_id="",
-        annotations_google_id="",
+        download_type="google",
+        download_id="",
+        annotations_download_id="",
         zip_filename="gs_mtg.zip",
         interval_length=20,
         annotations_filename="annotations.txt",
@@ -23,9 +24,10 @@ class GS_MTGPreparer(Preparer):
     ):
         self.data_dir = data_dir
         self.root_dir = root_dir
+        self.download_type = download_type
         self.download = download
-        self.google_id = google_id
-        self.annotations_google_id = annotations_google_id
+        self.download_id = download_id
+        self.annotations_download_id = annotations_download_id
         self.interval_length = interval_length
         self.zip_filename = zip_filename
         self.annotations_filename = annotations_filename
@@ -43,9 +45,18 @@ class GS_MTGPreparer(Preparer):
 
         if self.download:
             print("Downloading Giantsteps MTG dataset from google drive...")
-            gdown_and_unzip(self.google_id, self.zip_filename, self.data_dir)
+            download_and_unzip(
+                self.download_id,
+                self.zip_filename,
+                self.data_dir,
+                download_type=self.download_type,
+            )
             annotations_path = os.path.join(self.root_dir, self.annotations_filename)
-            gdown.download(id=self.annotations_google_id, output=annotations_path)
+            download(
+                self.annotations_download_id,
+                annotations_path,
+                download_type=self.download_type,
+            )
             audio_path = os.path.join(self.data_dir, "audio")
             sort_files_to_dirs(annotations_path, audio_path, self.root_dir)
             # cleanup

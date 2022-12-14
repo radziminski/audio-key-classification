@@ -10,8 +10,8 @@ ncs_preparer:
 
   download: False # Downloads saved version from google drive with id below
 
-  # google_id: '1XF7lCWlr8RjSeCUZ2FBaGkSdTNRxuWLV' # large version 7GB
-  google_id: '1ZAH0Zvb2yFgx86ZbCK4Mb17FHHwvqPxi' # small version 400MB
+  download_type: ${constants.ncs_host}
+  download_id: ${constants.ncs_id}
   zip_filename: 'data/ncs-dataset.zip'
 
   create: False # Creates dataset from scratch

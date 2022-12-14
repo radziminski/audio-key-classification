@@ -7,8 +7,9 @@ gs_mtg_preparer:
 
   download: False # Downloads saved version from google drive with id below
 
-  google_id: '1GRNO_PK8xGZIczzhcs2vPtIsO6SR6DSq'
-  annotations_google_id: '1hGhXxHw3cmsr0ZoyxiEbrKdOi3hkTWI6' # small version 400MB
+  download_type: ${constants.gs_mtg_host}
+  download_id: ${constants.gs_mtg_id}
+  annotations_download_id: ${constants.gs_mtg_annotations_id}
   zip_filename: 'data/gs_mtg-dataset.zip'
   annotations_filename: 'annotations.txt'
 

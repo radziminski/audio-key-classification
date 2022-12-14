@@ -37,7 +37,7 @@ transform:
 #     test_dir: ${datamodule.audio.test_dir}
 #     train_ratio: 0.85
 #     download: False # Downloads saved version from google drive with id below
-#     google_id: '1XF7lCWlr8RjSeCUZ2FBaGkSdTNRxuWLV'
+#     download_id: '1XF7lCWlr8RjSeCUZ2FBaGkSdTNRxuWLV'
 #     create: False # Creates dataset from scratch
 #     interval_length: 10
 

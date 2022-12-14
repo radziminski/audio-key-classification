@@ -7,8 +7,9 @@ gs_key_preparer:
 
   download: False # Downloads saved version from google drive with id below
 
-  google_id: '1DxeJVScOE7wnXFBQ1XZHrBlGmZEZnTM6'
-  keys_google_id: '1CtU9JrK413Q_6VeQP-H-1R-n2oP3wAYr' # small version 400MB
+  download_type: ${constants.gs_key_host}
+  download_id: ${constants.gs_key_id}
+  keys_download_id: ${constants.gs_key_keys_id}
   zip_filename: 'data/gs_key-dataset.zip'
   keys_zip_filename: 'data/gs_key-dataset-keys.zip'
 

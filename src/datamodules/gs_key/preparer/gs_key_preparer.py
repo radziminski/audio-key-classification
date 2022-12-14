@@ -2,7 +2,7 @@ import os
 
 from src.utils.audio import split_to_intervals_in_dirs, try_delete_dir
 from src.datamodules.common.preparer.preparer import Preparer
-from src.utils.download import gdown_and_unzip
+from src.utils.download import download_and_unzip
 from .utils.sort import sort_files_to_dirs
 
 
@@ -12,8 +12,9 @@ class GS_KeyPreparer(Preparer):
         data_dir="data/",
         root_dir="data/gs_key/",
         download=False,
-        google_id="",
-        keys_google_id="",
+        download_type="google",
+        download_id="",
+        keys_download_id="",
         zip_filename="gs_key-dataset.zip",
         keys_zip_filename="gs_key-dataset-keys.zip",
         interval_length=20,
@@ -23,8 +24,9 @@ class GS_KeyPreparer(Preparer):
         self.data_dir = data_dir
         self.root_dir = root_dir
         self.download = download
-        self.google_id = google_id
-        self.keys_google_id = keys_google_id
+        self.download_type = download_type
+        self.download_id = download_id
+        self.keys_download_id = keys_download_id
         self.keys_zip_filename = keys_zip_filename
         self.interval_length = interval_length
         self.zip_filename = zip_filename
@@ -42,8 +44,18 @@ class GS_KeyPreparer(Preparer):
 
         if self.download:
             print("Downloading Giantsteps Key dataset from google drive...")
-            gdown_and_unzip(self.google_id, self.zip_filename, self.data_dir)
-            gdown_and_unzip(self.keys_google_id, self.keys_zip_filename, self.data_dir)
+            download_and_unzip(
+                self.download_id,
+                self.zip_filename,
+                self.data_dir,
+                download_type=self.download_type,
+            )
+            download_and_unzip(
+                self.keys_download_id,
+                self.keys_zip_filename,
+                self.data_dir,
+                download_type=self.download_type,
+            )
             audio_path = os.path.join(self.data_dir, "audio")
             keys_path = os.path.join(self.data_dir, "keys_gs+")
 
