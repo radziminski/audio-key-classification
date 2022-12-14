@@ -193,13 +193,13 @@ def common_audio_loader(file, type="torch", device="cuda"):
     if type == "torch":
         audio, sr = torchaudio.load(file, format="mp3")
         audio.to(device)
-        sr.to(device)
+
         return audio, sr
 
     audio, sr = audiofile.read(file)
     audio = torch.tensor(audio, dtype=torch.float)
     audio.to(device)
-    sr.to(device)
+
     return audio, sr
 
 
