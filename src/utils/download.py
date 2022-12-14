@@ -14,7 +14,6 @@ def download(id, filename, download_type="google"):
         m.download_url(id, filename)
 
     if download_type == "url":
-        print("urlretrive", id, filename)
         urllib.request.urlretrieve(id, filename)
 
 
