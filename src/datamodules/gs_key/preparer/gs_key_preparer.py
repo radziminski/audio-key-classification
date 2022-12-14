@@ -43,7 +43,7 @@ class GS_KeyPreparer(Preparer):
             os.mkdir(self.root_dir)
 
         if self.download:
-            print("Downloading Giantsteps Key dataset from google drive...")
+            print(f"Downloading Giantsteps Key dataset from {self.download_type}...")
             download_and_unzip(
                 self.download_id,
                 self.zip_filename,

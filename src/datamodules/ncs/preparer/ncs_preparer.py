@@ -44,7 +44,7 @@ class NCSPreparer(Preparer):
             os.mkdir(self.data_dir)
 
         if self.download:
-            print("Downloading NCS dataset from google drive...")
+            print(f"Downloading NCS dataset from {self.download_type}...")
             download_and_unzip(
                 self.download_id,
                 self.zip_filename,

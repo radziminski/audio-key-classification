@@ -44,7 +44,7 @@ class GS_MTGPreparer(Preparer):
             os.mkdir(self.root_dir)
 
         if self.download:
-            print("Downloading Giantsteps MTG dataset from google drive...")
+            print(f"Downloading Giantsteps MTG dataset from {self.download_type}...")
             download_and_unzip(
                 self.download_id,
                 self.zip_filename,
