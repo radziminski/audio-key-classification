@@ -1,9 +1,7 @@
 import gdown
 import zipfile
 from mega import Mega
-
-mega = Mega()
-m = mega.login()
+import urllib.request
 
 
 def download(id, filename, download_type="google"):
@@ -11,11 +9,13 @@ def download(id, filename, download_type="google"):
         gdown.download(id=id, output=filename)
 
     if download_type == "mega":
+        mega = Mega()
+        m = mega.login()
         m.download_url(id, filename)
 
     if download_type == "url":
-        # TODO: add logic for downloading file from url to a specific destination (filename)
-        pass
+        print("urlretrive", id, filename)
+        urllib.request.urlretrieve(id, filename)
 
 
 def download_and_unzip(id, filename, destination, download_type="google"):

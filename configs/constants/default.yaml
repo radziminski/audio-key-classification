@@ -5,10 +5,11 @@ ncs_google_id: '1XF7lCWlr8RjSeCUZ2FBaGkSdTNRxuWLV' # 7GB
 ncs_small_google_id: '1ZAH0Zvb2yFgx86ZbCK4Mb17FHHwvqPxi' # 400mB
 ncs_mega_id: ''
 ncs_small_mega_id: 'https://mega.nz/file/jlw3mAKa#2AY_yje40N5RJxYzwbwIkb4x0fLzqctVo0NOfcSg61U'
+ncs_s3_id: 'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/ncs-dataset.zip'
 ncs_small_s3_id: 'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/ncs-dataset-small.zip'
 
-ncs_host: 'google' # 'google' or 'mega' or 'url'
-ncs_id: ${constants.ncs_small_google_id} # choose which id to use
+ncs_host: 'url' # 'google' or 'mega' or 'url'
+ncs_id: ${constants.ncs_small_s3_id} # choose which id to use
 
 # Giantsteps MTG
 gs_mtg_google_id: '1GRNO_PK8xGZIczzhcs2vPtIsO6SR6DSq'
@@ -18,9 +19,9 @@ gs_mtg_annotations_mega_id: 'https://mega.nz/file/Ox4zAKSb#LoNeE8ThB8yr1QH6omYsD
 gs_mtg_s3_id: 'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_mtg-dataset.zip'
 gs_mtg_annotations_s3_id: 'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/annotations.txt'
 
-gs_mtg_host: 'google'
-gs_mtg_id: ${constants.gs_mtg_google_id}
-gs_mtg_annotations_id: ${constants.gs_mtg_annotations_google_id}
+gs_mtg_host: 'url'
+gs_mtg_id: ${constants.gs_mtg_s3_id}
+gs_mtg_annotations_id: ${constants.gs_mtg_annotations_s3_id}
 
 # Giantsteps Key
 gs_key_google_id: '1DxeJVScOE7wnXFBQ1XZHrBlGmZEZnTM6'
@@ -30,6 +31,6 @@ gs_key_keys_mega_id: 'https://mega.nz/file/Gxo2SCLR#xnScEekzIiQXVtqLgBgv5Adeq5gr
 gs_key_keys_s3_id: 'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_key-dataset-keys.zip'
 gs_key_s3_id: 'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_key-dataset.zip'
 
-gs_key_host: 'mega'
-gs_key_id: ${constants.gs_key_mega_id}
-gs_key_keys_id: ${constants.gs_key_keys_mega_id}
+gs_key_host: 'url'
+gs_key_id: ${constants.gs_key_s3_id}
+gs_key_keys_id: ${constants.gs_key_keys_s3_id}
