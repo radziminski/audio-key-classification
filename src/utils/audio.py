@@ -168,7 +168,7 @@ def common_audio_transform(sample, transform, target_sr, target_length, device):
 
     # Resample audio to target_sr (44100) sample rate, so that all inputs have the same size
     if sr != target_sr:
-        resampler = torchaudio.transforms.Resample(sr, target_sr, device=device)
+        resampler = torchaudio.transforms.Resample(sr, target_sr)
         audio = resampler(audio).to(device)
 
     # FFMPEG does not cut the files into intervals perfectly - there are some minor
