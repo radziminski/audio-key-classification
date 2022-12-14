@@ -6,6 +6,7 @@ import numpy as np
 import subprocess
 import re
 import datetime
+import torchaudio
 
 
 def get_file_duration(filename):
@@ -159,7 +160,7 @@ def common_audio_transform(sample, transform, target_sr, target_length, device):
 
 
 def common_audio_loader(file):
-    return audiofile.read(file)
+    return torchaudio.load(file, encoding="MP3")
 
 
 def try_delete_dir(dir):
