@@ -1,12 +1,11 @@
 import audiofile
 import os
 import torch
-import audiofile
+import torchaudio
 import numpy as np
 import subprocess
 import re
 import datetime
-import torchaudio
 
 
 def get_file_duration(filename):
@@ -129,7 +128,8 @@ def resample(audio, sr, target_sr):
     return resampled_audio
 
 
-def common_audio_transform(sample, transform, target_sr, target_length, device):
+# Old version without torchaudio
+def common_audio_transform_old(sample, transform, target_sr, target_length, device):
     audio, sr = sample
 
     if len(audio.shape) > 1:
@@ -159,8 +159,41 @@ def common_audio_transform(sample, transform, target_sr, target_length, device):
     return audio
 
 
+# New version with torchaudio
+def common_audio_transform(sample, transform, target_sr, target_length, device):
+    audio, sr = sample
+
+    if len(audio.shape) > 1:
+        audio = audio.mean(axis=0)
+
+    # Resample audio to target_sr (44100) sample rate, so that all inputs have the same size
+    # if sr != target_sr:
+    #     audio = resample(audio, sr, target_sr)
+
+    # FFMPEG does not cut the files into intervals perfectly - there are some minor
+    # correction needed:
+    if len(audio) < target_length:
+        audio = torch.nn.functional.pad(audio, (0, target_length - len(audio)))
+
+    if len(audio) > target_length:
+        audio = audio[:target_length]
+
+    # TODO: investigate why device is needed here
+    audio_tensor = audio.to(device)
+
+    if transform is not None and callable(transform):
+        spectrogram = transform.to(device)(audio_tensor)
+        return spectrogram
+
+    return audio
+
+
 def common_audio_loader(file):
-    return torchaudio.load(file, encoding="MP3")
+    return torchaudio.load(file, format="mp3")
+
+
+def common_audio_loader_old(file):
+    return audiofile.read(file)
 
 
 def try_delete_dir(dir):
