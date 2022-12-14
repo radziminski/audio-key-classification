@@ -1,8 +1,7 @@
 import os
 import gdown
-import subprocess
 
-from src.utils.audio import split_to_intervals_in_dirs
+from src.utils.audio import split_to_intervals_in_dirs, try_delete_dir
 from src.datamodules.common.preparer.preparer import Preparer
 from src.utils.download import gdown_and_unzip
 from .utils.sort import sort_files_to_dirs
@@ -50,7 +49,7 @@ class GS_MTGPreparer(Preparer):
             audio_path = os.path.join(self.data_dir, "audio")
             sort_files_to_dirs(annotations_path, audio_path, self.root_dir)
             # cleanup
-            subprocess.run(f"rm -rf {audio_path}")
+            try_delete_dir(audio_path)
 
         if self.download and not self.split:
             print(

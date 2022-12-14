@@ -158,3 +158,13 @@ def common_audio_transform(sample, transform, target_sr, target_length, device):
 
 def common_audio_loader(file):
     return audiofile.read(file)
+
+
+def try_delete_dir(dir):
+    try:
+        cmd = f"rm -rf {dir}"
+        subprocess.run(
+            cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+    except:
+        return
