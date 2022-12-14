@@ -168,33 +168,38 @@ def common_audio_transform(sample, transform, target_sr, target_length, device):
 
     # Resample audio to target_sr (44100) sample rate, so that all inputs have the same size
     if sr != target_sr:
-        resampler = torchaudio.transforms.Resample(sr, target_sr)
-        audio = resampler(audio)
+        resampler = torchaudio.transforms.Resample(sr, target_sr, device=device)
+        audio = resampler(audio).to(device)
 
     # FFMPEG does not cut the files into intervals perfectly - there are some minor
     # correction needed:
     if len(audio) < target_length:
-        audio = torch.nn.functional.pad(audio, (0, target_length - len(audio)))
+        audio = torch.nn.functional.pad(audio, (0, target_length - len(audio))).to(
+            device
+        )
 
     if len(audio) > target_length:
         audio = audio[:target_length]
 
+    new_audio = torch.tensor(audio, device=device)
     if transform is not None and callable(transform):
-        spectrogram = transform.to(device)(audio)
+        spectrogram = transform.to(device)(new_audio)
         return spectrogram
 
-    return audio
+    return new_audio
 
 
 def common_audio_loader(file, type="torch", device="cuda"):
     if type == "torch":
         audio, sr = torchaudio.load(file, format="mp3")
         audio.to(device)
+        sr.to(device)
         return audio, sr
 
     audio, sr = audiofile.read(file)
-    audio = torch.tensor(audio, dtype=torch.float, device=device)
+    audio = torch.tensor(audio, dtype=torch.float)
     audio.to(device)
+    sr.to(device)
     return audio, sr
 
 
