@@ -1,4 +1,5 @@
 import pyrootutils
+import torch
 
 root = pyrootutils.setup_root(
     search_from=__file__,
@@ -33,12 +34,8 @@ root = pyrootutils.setup_root(
 # https://github.com/ashleve/pyrootutils
 # ------------------------------------------------------------------------------------ #
 
-from typing import List, Tuple
-
 import hydra
 from omegaconf import DictConfig
-from pytorch_lightning import LightningDataModule, LightningModule, Trainer
-from pytorch_lightning.loggers import LightningLoggerBase
 
 from src import utils
 
@@ -50,6 +47,9 @@ def main(cfg: DictConfig) -> None:
     dm = hydra.utils.instantiate(cfg.datamodule.audio)
     dm.prepare_data()
     dm.setup()
+
+    for dataset in dm.instantiated_datasets:
+        log.debug(dataset.class_to_idx)
 
     print("Input (spectrogram) size: ", dm.spectrogram_size)
 
@@ -67,6 +67,28 @@ def main(cfg: DictConfig) -> None:
         if index > 4:
             break
 
+
+def get_mean_std(loader):
+    channels_sum, channels_squared_sum, num_batches = 0, 0, 0
+
+    for data, _ in loader:
+        channels_sum += torch.mean(data, dim=[0, 2, 3])
+        channels_squared_sum += torch.mean(data ** 2, dim=[0, 2, 3])
+        num_batches += 1
+
+    mean = channels_sum / num_batches
+    std = (channels_squared_sum / num_batches - mean ** 2) ** 0.5
+    return mean, std
+
+
+# TEST
+# mean = ([0.9629]) std = ([2.2975])
+
+# TRAIN
+# mean = ([0.9176]) std = ([2.1356])
+
+# AVG
+# mean = 0,94025 avg = 2,21655
 
 if __name__ == "__main__":
     main()

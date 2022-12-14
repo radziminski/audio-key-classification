@@ -9,7 +9,7 @@ ncs_s3_id: 'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/ncs-dataset.
 ncs_small_s3_id: 'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/ncs-dataset-small.zip'
 
 ncs_host: 'url' # 'google' or 'mega' or 'url'
-ncs_id: ${constants.ncs_small_s3_id} # choose which id to use
+ncs_id: ${constants.ncs_s3_id} # choose which id to use
 
 # Giantsteps MTG
 gs_mtg_google_id: '1GRNO_PK8xGZIczzhcs2vPtIsO6SR6DSq'

@@ -70,7 +70,7 @@ class AudioDataModule(LightningDataModule):
             instantiated_datasets = [
                 instantiate_delayed(config) for config in self.train_datasets_configs
             ]
-
+            self.instantiated_datasets = instantiated_datasets
             dataset = ConcatDataset(instantiated_datasets)
             print(f"Train dataset size: {len(dataset)}")
 
@@ -88,7 +88,7 @@ class AudioDataModule(LightningDataModule):
             instantiated_datasets = [
                 instantiate_delayed(config) for config in self.test_datasets_configs
             ]
-
+            self.instantiated_datasets = instantiated_datasets
             dataset = ConcatDataset(instantiated_datasets)
             print(f"Test dataset size: {len(dataset)}")
 
