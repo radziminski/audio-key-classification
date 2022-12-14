@@ -21,7 +21,7 @@ prepare: ## Download and prepare datasets
 		datamodule.audio.preparers.ncs_preparer.download=True \
 		datamodule.audio.preparers.ncs_preparer.split=True \
 		datamodule.audio.preparers.gs_mtg_preparer.download=True \
-		datamodule.audio.preparers.gs_mtg_preparer.split=True
+		datamodule.audio.preparers.gs_mtg_preparer.split=True \
 		datamodule.audio.preparers.gs_key_preparer.download=True \
 		datamodule.audio.preparers.gs_key_preparer.split=True
 
