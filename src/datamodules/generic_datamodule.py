@@ -1,9 +1,6 @@
-import os
-
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import DataLoader, ConcatDataset, random_split
 
-from src.utils.download import download_and_unzip
 from src.utils.hydra import instantiate_delayed
 
 
@@ -38,7 +35,7 @@ class GenericDatamodule(LightningDataModule):
         )
 
     def setup(self, stage=None):
-        print("Image data module setup start...")
+        print("Data module setup start...")
 
         # Train / Validation
         if stage == "fit" or stage is None:
@@ -71,7 +68,7 @@ class GenericDatamodule(LightningDataModule):
 
             self.test_dataset = dataset
 
-        print("Image data module setup finished.")
+        print("Data module setup finished.")
 
     def train_dataloader(self):
         return DataLoader(
