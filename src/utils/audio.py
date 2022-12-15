@@ -86,7 +86,7 @@ def split_to_intervals(filename, output_filename_prefix, interval_length):
         for file in os.listdir(os.path.dirname(filename)):
             basename = os.path.basename(output_filename_prefix)
             if file.startswith(basename) and (
-                    file.endswith("mp3") or file.endswith("wav")
+                file.endswith("mp3") or file.endswith("wav")
             ):
                 filepath = os.path.join(os.path.dirname(filename), file)
 
@@ -161,7 +161,7 @@ def common_audio_transform_old(sample, transform, target_sr, target_length, devi
 
 
 # potentially TODO - extract to hydra config
-NORMALIZE_TRANSFORM = transforms.Compose([transforms.Normalize((0.94025,), (2.21655,))])
+NORMALIZE_TRANSFORM = transforms.Normalize((0.94025,), (2.21655,))
 
 
 # New version with torchaudio
@@ -189,7 +189,7 @@ def common_audio_transform(sample, transform, target_sr, target_length, device):
     new_audio = audio.clone().to(device)
     if transform is not None and callable(transform):
         spectrogram = transform.to(device)(new_audio)
-        spectrogram = NORMALIZE_TRANSFORM(spectrogram)
+        spectrogram = NORMALIZE_TRANSFORM.to(device)(spectrogram)
         return spectrogram
 
     return new_audio
