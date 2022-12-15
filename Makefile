@@ -16,6 +16,9 @@ clean-logs: ## Clean logs
 format: ## Run pre-commit hooks
 	pre-commit run -a
 
+install:
+	chmod +rwx scripts/install.sh && scripts/install.sh
+
 prepare: ## Download and prepare datasets 
 	python src/prepare.py \
 		datamodule.audio.preparers.ncs_preparer.download=True \
