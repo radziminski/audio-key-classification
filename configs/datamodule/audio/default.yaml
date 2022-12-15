@@ -9,7 +9,7 @@ loader_type: 'torch' # 'audiofile' or 'torch'
 
 transform:
   _target_: nnAudio.features.cqt.CQT
-  hop_length: 8192
+  hop_length: 2048
   sr: ${datamodule.audio.sr}
   verbose: False
   n_bins: 120
