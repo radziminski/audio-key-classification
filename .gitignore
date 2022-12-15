@@ -153,3 +153,5 @@ data/
 logs/
 .env
 .autoenv
+
+tensorboard/
