@@ -7,16 +7,18 @@ defaults:
 
 model_checkpoint:
   dirpath: ${paths.output_dir}/checkpoints
-  filename: "epoch_{epoch:03d}"
-  monitor: "val/acc"
-  mode: "max"
+  filename: 'epoch_{epoch:03d}'
+  monitor: 'val/acc'
+  mode: 'max'
   save_last: True
   auto_insert_metric_name: False
+  every_n_epochs: 2
 
 early_stopping:
-  monitor: "val/acc"
-  patience: 100
-  mode: "max"
+  monitor: 'val/acc'
+  patience: 5
+  mode: 'max'
+  min_delta: 0.05
 
 model_summary:
   max_depth: -1

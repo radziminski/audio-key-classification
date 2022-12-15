@@ -1,10 +1,10 @@
 _target_: src.models.audio_classifier.AudioClassifier
-learning_rate: 0.01
+learning_rate: 0.005
 
 optimizer:
   _target_: torch.optim.Adam
   _partial_: true
-  lr: 0.01
+  lr: 0.005
   weight_decay: 0.0
 
 scheduler:
