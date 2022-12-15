@@ -50,7 +50,7 @@ test-default: ## Test model by running 1 full epoch
 	python src/train.py debug=fdr
 
 test-overfit: ## Test model by running 1 train, val and test loop, using only 1 batch
-	python src/train.py debug=overfit
+	python src/train.py debug=overfit logger=tensorboard
 
 test-fdr: ## Test model with overfit on 1 batch
 	python src/train.py debug=fdr
