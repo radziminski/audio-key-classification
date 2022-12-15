@@ -1,3 +1,5 @@
+import logging
+
 import pyrootutils
 
 root = pyrootutils.setup_root(
@@ -38,9 +40,10 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
     # set seed for random number generators in pytorch, numpy and python.random
     if cfg.get("seed"):
         pl.seed_everything(cfg.seed, workers=True)
+    logging.getLogger('PIL').setLevel(logging.WARNING)
 
     log.info(f"Instantiating datamodule <{cfg.datamodule.audio._target_}>")
-    datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule.audio)
+    datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule.image)
 
     log.info(f"Instantiating model <{cfg.model._target_}>")
     model: LightningModule = hydra.utils.instantiate(cfg.model)

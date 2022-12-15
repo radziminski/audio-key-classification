@@ -44,7 +44,8 @@ prepare-gs-key: ## Download and prepare GS KEY dataset
 		datamodule.audio.preparers.gs_key_preparer.split=True
 
 prepare-images:
-	python src/prepare_images.py
+	python src/prepare_images.py \
+	datamodule.image.download=True
 
 train: ## Train the model
 	python src/train.py
@@ -53,7 +54,9 @@ test-default: ## Test model by running 1 full epoch
 	python src/train.py debug=fdr
 
 test-overfit: ## Test model by running 1 train, val and test loop, using only 1 batch
-	python src/train.py debug=overfit logger=tensorboard datamodule.audio.batch_size=32
+	python src/train.py debug=overfit \
+	logger=tensorboard \
+    datamodule.image.batch_size=32
 
 test-fdr: ## Test model with overfit on 1 batch
 	python src/train.py debug=fdr

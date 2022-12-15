@@ -9,7 +9,10 @@ class ImageDatasetFolder(torchvision.datasets.ImageFolder):
     ):
         print(root_dir)
         self.root = root_dir
-        dataset_transform = transforms.Compose([transforms.Normalize((0.94025,), (2.21655,))])
+        dataset_transform = transforms.Compose([
+            transforms.Grayscale(),
+            transforms.ToTensor(),
+            transforms.Normalize((0.94025,), (2.21655,))])
 
         super(ImageDatasetFolder, self).__init__(
             root_dir,

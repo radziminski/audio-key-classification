@@ -7,7 +7,7 @@ ncs_images_url: ${constants.ncs_images_url}
 gs_mtg_images_url: ${constants.gs_mtg_images_url}
 gs_key_images_url: ${constants.gs_key_images_url}
 images_dir: ${paths.images_dir}
-
+download: False
 
 defaults:
   - test_datasets:

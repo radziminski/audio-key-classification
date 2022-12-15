@@ -22,7 +22,8 @@ class ImageDataModule(LightningDataModule):
             ncs_images_url='',
             gs_mtg_images_url='',
             gs_key_images_url='',
-            images_dir='images'
+            images_dir='images',
+            download=False
     ):
         super().__init__()
         self.save_hyperparameters(
@@ -32,6 +33,10 @@ class ImageDataModule(LightningDataModule):
         self._parse_datasets(train_datasets, test_datasets)
 
     def prepare_data(self):
+        if self.hparams.download:
+            self._prepare_data()
+
+    def _prepare_data(self):
         if not os.path.exists(self.hparams.root_dir):
             os.mkdir(self.hparams.root_dir)
 
