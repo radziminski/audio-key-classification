@@ -24,15 +24,13 @@ log = utils.get_pylogger(__name__)
 def main(cfg: DictConfig) -> None:
     dm = hydra.utils.instantiate(cfg.datamodule.audio)
     dm.prepare_data()
-    dm.setup(stage="test")
+    dm.setup()
 
     # for dataset in dm.instantiated_datasets:
     #     print(dataset.root)
     #     dataloader = build_dataloader(dataset)
     #     class_idx_map = dataset.class_to_idx
     #     save_dataloader(dataloader, class_idx_map)
-
-    print("Input (spectrogram) size: ", dm.spectrogram_size)
 
     print("Some train tensors: ")
     for index, entry in enumerate(dm.train_dataloader()):
