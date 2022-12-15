@@ -47,6 +47,9 @@ prepare-images:
 	python src/prepare_images.py \
 	datamodule.image.download=True
 
+eval: ## Train the model
+	python src/eval.py
+
 train: ## Train the model
 	python src/train.py
 

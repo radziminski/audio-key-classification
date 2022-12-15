@@ -1,9 +1,8 @@
 import torch
-import torchmetrics
 from pytorch_lightning import LightningModule
 from torchmetrics import MaxMetric, MeanMetric
 from torchmetrics.classification.accuracy import Accuracy
-from torch import argmax
+from src.utils import mirex
 
 
 class AudioClassifier(LightningModule):
@@ -53,6 +52,13 @@ class AudioClassifier(LightningModule):
         preds = torch.argmax(logits, dim=1)
         return loss, preds, y
 
+    def _test_step(self, batch):
+        x, y = batch
+        logits = self.forward(x)
+        preds = torch.argmax(logits, dim=1)
+        loss = mirex.mirex_score(preds, y)
+        return loss, preds, y
+
     def training_step(self, batch, batch_idx: int):
         loss, preds, targets = self.step(batch)
 
@@ -94,13 +100,13 @@ class AudioClassifier(LightningModule):
         self.log("val/acc_best", self.val_acc_best.compute(), prog_bar=True)
 
     def test_step(self, batch, batch_idx: int):
-        loss, preds, targets = self.step(batch)
+        loss, preds, targets = self._test_step(batch)
 
         # update and log metrics
         self.test_loss(loss)
         self.test_acc(preds, targets)
         self.log(
-            "test/loss", self.test_loss, on_step=False, on_epoch=True, prog_bar=True
+            "test/loss-mirex", self.test_loss, on_step=False, on_epoch=True, prog_bar=True
         )
         self.log("test/acc", self.test_acc, on_step=False, on_epoch=True, prog_bar=True)
 
