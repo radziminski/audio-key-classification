@@ -97,7 +97,7 @@ class ImageDataModule(LightningDataModule):
 
             self.test_dataset = dataset
 
-        print("Audio data module setup finished.")
+        print("Image data module setup finished.")
 
     def train_dataloader(self):
         return DataLoader(
