@@ -1,19 +1,20 @@
 _target_: src.datamodules.audio_datamodule.AudioDataModule
-batch_size: 4
-num_workers: 0
+batch_size: 16
+num_workers: 1
 pin_memory: False
 sr: 44100
 extensions: ['.wav', '.mp3', '.flac', '.ogg']
 interval_length: 30
-loader_type: 'audiofile' # 'audiofile' or 'torch'
+loader_type: 'torch' # 'audiofile' or 'torch'
 
 transform:
   _target_: nnAudio.features.cqt.CQT
-  hop_length: 512
+  hop_length: 8192
   sr: ${datamodule.audio.sr}
   verbose: False
-  n_bins: 84
-  bins_per_octave: 12
+  n_bins: 120
+  bins_per_octave: 24
+  fmin: 65.41
 
 defaults:
   - test_datasets:
