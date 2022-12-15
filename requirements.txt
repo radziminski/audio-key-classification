@@ -16,7 +16,7 @@ pydub==0.25.1
 nnAudio==0.3.2
 
 # --------- loggers --------- #
-# wandb
+wandb
 # neptune-client
 # mlflow
 # comet-ml
