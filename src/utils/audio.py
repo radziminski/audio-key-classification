@@ -86,7 +86,7 @@ def split_to_intervals(filename, output_filename_prefix, interval_length):
         for file in os.listdir(os.path.dirname(filename)):
             basename = os.path.basename(output_filename_prefix)
             if file.startswith(basename) and (
-                file.endswith("mp3") or file.endswith("wav")
+                    file.endswith("mp3") or file.endswith("wav")
             ):
                 filepath = os.path.join(os.path.dirname(filename), file)
 

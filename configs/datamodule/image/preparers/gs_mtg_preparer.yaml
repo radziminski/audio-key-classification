@@ -1,0 +1,17 @@
+gs_mtg_preparer:
+  _target_: src.datamodules.gs_mtg.preparer.gs_mtg_preparer.GS_MTGPreparer
+  data_dir: ${paths.data_dir}
+  root_dir: ${paths.gs_mtg_root_dir}
+
+  extensions: ${datamodule.audio.extensions}
+
+  download: False # Downloads saved version from google drive with id below
+
+  download_type: ${constants.gs_mtg_host}
+  download_id: ${constants.gs_mtg_id}
+  annotations_download_id: ${constants.gs_mtg_annotations_id}
+  zip_filename: 'data/gs_mtg-dataset.zip'
+  annotations_filename: 'annotations.txt'
+
+  split: False # splits all audio files into intervals with length:
+  interval_length: ${datamodule.audio.interval_length}

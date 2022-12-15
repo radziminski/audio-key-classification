@@ -34,3 +34,8 @@ gs_key_s3_id: 'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_key-da
 gs_key_host: 'url'
 gs_key_id: ${constants.gs_key_s3_id}
 gs_key_keys_id: ${constants.gs_key_keys_s3_id}
+
+# IMAGES
+ncs_images_url: 'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/ncs.tar.xz' # TODO - change
+gs_mtg_images_url: 'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_mtg.tar.xz'
+gs_key_images_url: 'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_key.tar.xz'

@@ -1,47 +1,49 @@
+import os
+
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import DataLoader, ConcatDataset, random_split
 
+from src.utils.download import download_and_unzip
 from src.utils.hydra import instantiate_delayed
 
 
-# TODO extract common functionality to abstract class
-class AudioDataModule(LightningDataModule):
+class ImageDataModule(LightningDataModule):
     def __init__(
             self,
+            root_dir='./data',
             batch_size=64,
             num_workers: int = 0,
             pin_memory: bool = False,
             train_ratio=0.85,
             val_ratio=0.15,
-            sr=44100,
-            interval_length=20,
-            extensions=[],
-            loader_type="torch",
-            transform=None,
             preparers=None,
             train_datasets=None,
             test_datasets=None,
+            ncs_images_url='',
+            gs_mtg_images_url='',
+            gs_key_images_url='',
+            images_dir='images'
     ):
         super().__init__()
-
-        # this line allows to access init params with 'self.hparams' attribute
-        # also ensures init params will be stored in ckpt
         self.save_hyperparameters(
             logger=False, ignore=["preparers", "datasets", "transform"]
         )
         self.preparers = preparers if preparers is not None else []
         self._parse_datasets(train_datasets, test_datasets)
 
-        # Dataset info
-        self.num_classes = 24
+    def prepare_data(self):
+        if not os.path.exists(self.hparams.root_dir):
+            os.mkdir(self.hparams.root_dir)
 
-        self.spectrogram_size = None
-        if transform is not None:
-            self.spectrogram_size = (
-                1,
-                84,  # transform.n_bins
-                interval_length * sr // transform.hop_length + 1,
-            )
+        if not os.path.exists(self.hparams.images_dir):
+            os.mkdir(self.hparams.images_dir)
+
+        download_and_unzip(self.hparams.ncs_images_url, os.path.join(self.hparams.images_dir, 'ncs_images.tar.xz'),
+                           self.hparams.images_dir, 'url')
+        download_and_unzip(self.hparams.gs_mtg_images_url, os.path.join(self.hparams.images_dir, 'gs_mtg.tar.xz'),
+                           self.hparams.images_dir, 'url')
+        download_and_unzip(self.hparams.gs_key_images_url, os.path.join(self.hparams.images_dir, 'gs_key.tar.xz'),
+                           self.hparams.images_dir, 'url')
 
     def _parse_datasets(self, train_datasets_configs, test_datasets_configs):
 
@@ -56,20 +58,16 @@ class AudioDataModule(LightningDataModule):
             else []
         )
 
-    def prepare_data(self):
-        print("Audio data module prepare start...")
-        for preparer in self.preparers.values():
-            preparer.prepare()
-        print("Audio data module prepare finished.")
-
     def setup(self, stage=None):
-        print("Audio data module setup start...")
+        print("Image data module setup start...")
 
         # Train / Validation
         if stage == "fit" or stage is None:
             instantiated_datasets = [
                 instantiate_delayed(config) for config in self.train_datasets_configs
             ]
+            print(f'instantiated: {len(instantiated_datasets)} datasets')
+
             self.instantiated_datasets = instantiated_datasets
             dataset = ConcatDataset(instantiated_datasets)
             print(f"Train dataset size: {len(dataset)}")

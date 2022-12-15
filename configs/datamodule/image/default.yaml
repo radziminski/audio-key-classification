@@ -1,0 +1,22 @@
+_target_: src.datamodules.image_datamodule.ImageDataModule
+batch_size: 16
+num_workers: 1
+pin_memory: False
+root_dir: ${paths.data_dir}
+ncs_images_url: ${constants.ncs_images_url}
+gs_mtg_images_url: ${constants.gs_mtg_images_url}
+gs_key_images_url: ${constants.gs_key_images_url}
+images_dir: ${paths.images_dir}
+
+
+defaults:
+  - test_datasets:
+      - ncs_test_dataset
+      - gs_key_dataset
+  - train_datasets:
+      - ncs_train_dataset
+      - gs_mtg_dataset
+  - preparers:
+      - ncs_preparer
+      - gs_mtg_preparer
+      - gs_key_preparer

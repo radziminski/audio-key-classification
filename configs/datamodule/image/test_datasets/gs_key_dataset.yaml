@@ -1,0 +1,3 @@
+gs_key_dataset:
+  target: src.datamodules.common.dataset.image_dataset_folder.ImageDatasetFolder
+  root_dir: ${paths.gs_key_images_dir}

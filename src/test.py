@@ -1,5 +1,9 @@
+import subprocess
+
 import pyrootutils
 import torch
+from torch.utils.data import DataLoader
+from torchvision.utils import save_image
 
 root = pyrootutils.setup_root(
     search_from=__file__,
@@ -7,32 +11,6 @@ root = pyrootutils.setup_root(
     pythonpath=True,
     dotenv=True,
 )
-
-# ------------------------------------------------------------------------------------ #
-# `pyrootutils.setup_root(...)` is an optional line at the top of each entry file
-# that helps to make the environment more robust and convenient
-#
-# the main advantages are:
-# - allows you to keep all entry files in "src/" without installing project as a package
-# - makes paths and scripts always work no matter where is your current work dir
-# - automatically loads environment variables from ".env" file if exists
-#
-# how it works:
-# - the line above recursively searches for either ".git" or "pyproject.toml" in present
-#   and parent dirs, to determine the project root dir
-# - adds root dir to the PYTHONPATH (if `pythonpath=True`), so this file can be run from
-#   any place without installing project as a package
-# - sets PROJECT_ROOT environment variable which is used in "configs/paths/default.yaml"
-#   to make all paths always relative to the project root
-# - loads environment variables from ".env" file in root dir (if `dotenv=True`)
-#
-# you can remove `pyrootutils.setup_root(...)` if you:
-# 1. either install project as a package or move each entry file to the project root dir
-# 2. simply remove PROJECT_ROOT variable from paths in "configs/paths/default.yaml"
-# 3. always run entry files from the project root dir
-#
-# https://github.com/ashleve/pyrootutils
-# ------------------------------------------------------------------------------------ #
 
 import hydra
 from omegaconf import DictConfig
@@ -46,10 +24,13 @@ log = utils.get_pylogger(__name__)
 def main(cfg: DictConfig) -> None:
     dm = hydra.utils.instantiate(cfg.datamodule.audio)
     dm.prepare_data()
-    dm.setup()
+    dm.setup(stage="test")
 
-    for dataset in dm.instantiated_datasets:
-        log.debug(dataset.class_to_idx)
+    # for dataset in dm.instantiated_datasets:
+    #     print(dataset.root)
+    #     dataloader = build_dataloader(dataset)
+    #     class_idx_map = dataset.class_to_idx
+    #     save_dataloader(dataloader, class_idx_map)
 
     print("Input (spectrogram) size: ", dm.spectrogram_size)
 
@@ -57,6 +38,7 @@ def main(cfg: DictConfig) -> None:
     for index, entry in enumerate(dm.train_dataloader()):
         sample, label = entry
         print(sample[0].shape, label[0])
+        save_image(sample[0], f'{index}.png')
         if index > 4:
             break
 
@@ -66,6 +48,33 @@ def main(cfg: DictConfig) -> None:
         print(sample[0].shape, label[0])
         if index > 4:
             break
+
+
+def save_dataloader(data_loader, class_idx_map):
+    for index, entry in enumerate(data_loader):
+        sample, label = entry
+        class_name = find_class(label[0].item(), class_idx_map)
+        class_path = f'data/images/ncs/validation/{class_name}'
+        subprocess.run(
+            f"mkdir -p {class_path}", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+        image_path = f'data/images/ncs/validation/{class_name}/{index}.png'
+        print(image_path)
+        save_image(sample[0], image_path)
+
+
+def find_class(index, class_idx_map):
+    for key, value in class_idx_map.items():
+        if index is value:
+            return key
+
+
+def build_dataloader(dataset):
+    return DataLoader(
+        dataset,
+        batch_size=1,
+        shuffle=True
+    )
 
 
 def get_mean_std(loader):

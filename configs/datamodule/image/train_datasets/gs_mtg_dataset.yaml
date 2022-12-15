@@ -1,0 +1,3 @@
+gs_mtg_dataset:
+  target: src.datamodules.common.dataset.image_dataset_folder.ImageDatasetFolder
+  root_dir: ${paths.gs_mtg_images_dir}
