@@ -43,6 +43,9 @@ prepare-gs-key: ## Download and prepare GS KEY dataset
 		datamodule.audio.preparers.gs_key_preparer.download=True \
 		datamodule.audio.preparers.gs_key_preparer.split=True
 
+prepare-images:
+	python src/prepare_images.py
+
 train: ## Train the model
 	python src/train.py
 
