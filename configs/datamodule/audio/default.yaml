@@ -1,6 +1,6 @@
 _target_: src.datamodules.audio_datamodule.AudioDataModule
 batch_size: 16
-num_workers: 1
+num_workers: 0
 pin_memory: False
 sr: 44100
 extensions: ['.wav', '.mp3', '.flac', '.ogg']

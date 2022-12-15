@@ -4,6 +4,7 @@ from .utils.create import create_ncs_dataset
 from src.utils.audio import split_to_intervals_in_dirs
 from src.datamodules.common.preparer.preparer import Preparer
 from src.utils.download import download_and_unzip
+import zipfile
 
 
 class NCSPreparer(Preparer):
@@ -45,12 +46,16 @@ class NCSPreparer(Preparer):
 
         if self.download:
             print(f"Downloading NCS dataset from {self.download_type}...")
-            download_and_unzip(
-                self.download_id,
-                self.zip_filename,
-                self.data_dir,
-                download_type=self.download_type,
-            )
+            # download_and_unzip(
+            #     self.download_id,
+            #     self.zip_filename,
+            #     self.data_dir,
+            #     download_type=self.download_type,
+            # )
+
+            zip = zipfile.ZipFile(self.zip_filename)
+            zip.extractall(self.data_dir)
+            zip.close()
         elif self.create:
             print("Creating NCS dataset from scratch...")
             create_ncs_dataset(
