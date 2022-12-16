@@ -68,6 +68,9 @@ eval-full: ## Evaluation on full songs
 train: ## Train the model
 	python src/train.py
 
+train-from-checkpoint: ## Train the model
+	python src/train.py ckpt_path='checkpoints/best.ckpt'
+
 test-default: ## Test model by running 1 full epoch
 	python src/train.py debug=fdr
 
