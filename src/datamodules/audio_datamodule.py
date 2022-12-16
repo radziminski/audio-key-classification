@@ -65,7 +65,6 @@ class AudioDataModule(GenericDatamodule):
                 image = sample[0]
                 key_dir = idx_to_class[label]
                 filename = os.path.basename(dataset.samples[index][0][:-4]) + ".png"
-                print(filename)
                 full_dir = os.path.join(dataset_images_dir, key_dir)
                 full_path = os.path.join(full_dir, filename)
 
