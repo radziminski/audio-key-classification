@@ -42,8 +42,13 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
         pl.seed_everything(cfg.seed, workers=True)
     logging.getLogger("PIL").setLevel(logging.WARNING)
 
-    log.info(f"Instantiating datamodule <{cfg.datamodule.image._target_}>")
-    datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule.image)
+    datamodule = None
+    if cfg.datamodule_type == "image":
+        log.info(f"Instantiating datamodule <{cfg.datamodule.image._target_}>")
+        datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule.image)
+    if cfg.datamodule_type == "audio":
+        log.info(f"Instantiating datamodule <{cfg.datamodule.audio._target_}>")
+        datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule.audio)
 
     log.info(f"Instantiating model <{cfg.model._target_}>")
     model: LightningModule = hydra.utils.instantiate(cfg.model)

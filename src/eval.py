@@ -27,9 +27,13 @@ def evaluate(cfg: DictConfig) -> Tuple[dict, dict]:
 
     assert cfg.ckpt_path
 
-    logging.getLogger('PIL').setLevel(logging.WARNING)
+    logging.getLogger("PIL").setLevel(logging.WARNING)
 
-    datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule.image)
+    datamodule = None
+    if cfg.datamodule_type == "image":
+        datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule.image)
+    if cfg.datamodule_type == "audio":
+        datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule.audio)
 
     log.info(f"Instantiating model <{cfg.model._target_}>")
     model: LightningModule = hydra.utils.instantiate(cfg.model)
@@ -38,9 +42,7 @@ def evaluate(cfg: DictConfig) -> Tuple[dict, dict]:
     logger: List[LightningLoggerBase] = utils.instantiate_loggers(cfg.get("logger"))
 
     log.info(f"Instantiating trainer <{cfg.trainer._target_}>")
-    trainer: Trainer = hydra.utils.instantiate(
-        cfg.trainer, logger=logger
-    )
+    trainer: Trainer = hydra.utils.instantiate(cfg.trainer, logger=logger)
 
     object_dict = {
         "cfg": cfg,
