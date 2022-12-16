@@ -27,7 +27,7 @@ log = utils.get_pylogger(__name__)
 @utils.task_wrapper
 def evaluate(cfg: DictConfig) -> Tuple[dict, dict]:
     assert cfg.ckpt_path
-    print(f'ckpt path: {cfg.ckpt_path}')
+    print(f"ckpt path: {cfg.ckpt_path}")
 
     logging.getLogger("PIL").setLevel(logging.WARNING)
 
@@ -59,7 +59,8 @@ def evaluate(cfg: DictConfig) -> Tuple[dict, dict]:
         utils.log_hyperparameters(object_dict)
 
     checkpoint = torch.load(cfg.ckpt_path)
-    model.load_state_dict(checkpoint['state_dict'])
+    model.load_state_dict(checkpoint["state_dict"])
+    model.eval()
 
     log.info("Starting testing!")
     # trainer.test(model=model, datamodule=datamodule, ckpt_path=cfg.ckpt_path)
@@ -86,9 +87,7 @@ def test_dataset(dataset, model):
         image = sample[0]
         label = sample[1]
         logits = model(torch.stack([image], dim=0))
-        print(logits.shape)
-        # print(image.shape)
-        print(f'label: {label}, pred:{torch.argmax(logits, dim=1)}')
+        print(f"label: {label}, pred:{torch.argmax(logits, dim=1)}")
         filepart = extract_filepart(full_sample_path)
         song_num = extract_song_num(filepart)
         # print(filepart)
@@ -112,7 +111,7 @@ def test_dataset(dataset, model):
             current_batch_samples = [image]
             current_batch_labels = [label]
             previous_song_num = song_num
-    print(f'final loss: {losses_sum / songs_count}')
+    print(f"final loss: {losses_sum / songs_count}")
 
 
 def extract_song_num(filename: str):
@@ -121,7 +120,7 @@ def extract_song_num(filename: str):
 
 
 def extract_filepart(full_path: str):
-    match = re.search(r'^.*/([^/]*)$', full_path)
+    match = re.search(r"^.*/([^/]*)$", full_path)
     return match.group(1)
 
 
