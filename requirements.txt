@@ -1,9 +1,9 @@
 # --------- pytorch --------- #
-torch==1.11.0
-torchvision==0.12.0
-pytorch-lightning==1.8.1
-torchmetrics==0.10.0
-torchaudio==0.11.0
+torch==1.13.0
+torchvision==0.14.0
+lightning==1.8.1
+torchmetrics==0.11.0
+torchaudio==0.13.0
 
 # --------- hydra --------- #
 hydra-core==1.2.0
@@ -17,14 +17,10 @@ nnAudio==0.3.2
 
 # --------- loggers --------- #
 wandb
-# neptune-client
-# mlflow
-# comet-ml
 
 # --------- others --------- #
 pyrootutils     # standardizing the project root setup
 pre-commit      # hooks for applying linters on commit
 rich            # beautiful text formatting in terminal
 pytest          # tests
-# sh            # for running bash commands in some tests (linux/macos only)
 mega.py==1.0.8
