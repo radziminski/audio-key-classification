@@ -87,7 +87,6 @@ def test_dataset(dataset, model):
         image = sample[0]
         label = sample[1]
         logits = model(torch.stack([image], dim=0))
-        print(f"label: {label}, pred:{torch.argmax(logits, dim=1)}")
         filepart = extract_filepart(full_sample_path)
         song_num = extract_song_num(filepart)
         # print(filepart)
