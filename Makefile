@@ -82,6 +82,15 @@ test-fdr: ## Test model with overfit on 1 batch
 test-limit: ## Test model by running train on 1% of data
 	python src/train.py debug=limit
 
+experiments-nf: ## Run experiments with different number of feature maps
+	scripts/experiments_nf.sh
+
+experiments-hparams: ## Run experiments for hyperparams tuning
+	scripts/experiments_nf.sh
+
+experiments-dataset: ## Run experiments with different combinations of datasets
+	scripts/experiments_nf.sh
+
 debug: ## Enter debugging mode with pdb
 	#
 	# tips:
