@@ -40,9 +40,9 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
     # set seed for random number generators in pytorch, numpy and python.random
     if cfg.get("seed"):
         pl.seed_everything(cfg.seed, workers=True)
-    logging.getLogger('PIL').setLevel(logging.WARNING)
+    logging.getLogger("PIL").setLevel(logging.WARNING)
 
-    log.info(f"Instantiating datamodule <{cfg.datamodule.audio._target_}>")
+    log.info(f"Instantiating datamodule <{cfg.datamodule.image._target_}>")
     datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule.image)
 
     log.info(f"Instantiating model <{cfg.model._target_}>")

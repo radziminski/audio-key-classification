@@ -22,7 +22,7 @@ log = utils.get_pylogger(__name__)
 
 @hydra.main(version_base="1.2", config_path=root / "configs", config_name="train.yaml")
 def main(cfg: DictConfig) -> None:
-    dm = hydra.utils.instantiate(cfg.datamodule.audio)
+    dm = hydra.utils.instantiate(cfg.datamodule.image)
     dm.prepare_data()
     dm.setup()
 
@@ -36,7 +36,7 @@ def main(cfg: DictConfig) -> None:
     for index, entry in enumerate(dm.train_dataloader()):
         sample, label = entry
         print(sample[0].shape, label[0])
-        save_image(sample[0], f'{index}.png')
+        save_image(sample[0], f"{index}.png")
         if index > 4:
             break
 
@@ -52,11 +52,14 @@ def save_dataloader(data_loader, class_idx_map):
     for index, entry in enumerate(data_loader):
         sample, label = entry
         class_name = find_class(label[0].item(), class_idx_map)
-        class_path = f'data/images/ncs/validation/{class_name}'
+        class_path = f"data/images/ncs/validation/{class_name}"
         subprocess.run(
-            f"mkdir -p {class_path}", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            f"mkdir -p {class_path}",
+            shell=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
         )
-        image_path = f'data/images/ncs/validation/{class_name}/{index}.png'
+        image_path = f"data/images/ncs/validation/{class_name}/{index}.png"
         print(image_path)
         save_image(sample[0], image_path)
 
@@ -68,11 +71,7 @@ def find_class(index, class_idx_map):
 
 
 def build_dataloader(dataset):
-    return DataLoader(
-        dataset,
-        batch_size=1,
-        shuffle=True
-    )
+    return DataLoader(dataset, batch_size=1, shuffle=True)
 
 
 def get_mean_std(loader):
@@ -80,11 +79,11 @@ def get_mean_std(loader):
 
     for data, _ in loader:
         channels_sum += torch.mean(data, dim=[0, 2, 3])
-        channels_squared_sum += torch.mean(data ** 2, dim=[0, 2, 3])
+        channels_squared_sum += torch.mean(data**2, dim=[0, 2, 3])
         num_batches += 1
 
     mean = channels_sum / num_batches
-    std = (channels_squared_sum / num_batches - mean ** 2) ** 0.5
+    std = (channels_squared_sum / num_batches - mean**2) ** 0.5
     return mean, std
 
 
