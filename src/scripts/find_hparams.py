@@ -40,10 +40,8 @@ def find_params(cfg: DictConfig) -> Tuple[dict, dict]:
     print(f"Best initial learning rate: {lr}")
     lr_finder.plot()
 
-    tuner.scale_batch_size(model=model, datamodule=stanford_dogs_dm)
-
-
-print(f"Best batch size: {stanford_dogs_dm.batch_size}")
+    tuner.scale_batch_size(model=model, datamodule=datamodule)
+    print(f"Best batch size: {datamodule.batch_size}")
 
 
 @hydra.main(version_base="1.2", config_path=root / "configs", config_name="train.yaml")
