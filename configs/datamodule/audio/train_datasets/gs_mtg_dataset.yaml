@@ -1,4 +1,5 @@
 gs_mtg_dataset:
+  name: gs_mtg_dataset
   target: src.datamodules.common.dataset.audio_dataset_folder.AudioDatasetFolder
   root_dir: ${paths.gs_mtg_root_dir}
   transform: ${datamodule.audio.transform}

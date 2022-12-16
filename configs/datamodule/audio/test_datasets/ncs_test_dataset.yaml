@@ -1,4 +1,5 @@
 ncs_test_dataset:
+  name: ncs_test_dataset
   target: src.datamodules.common.dataset.audio_dataset_folder.AudioDatasetFolder
   root_dir: ${paths.ncs_test_dir}
   transform: ${datamodule.audio.transform}

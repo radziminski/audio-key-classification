@@ -5,6 +5,7 @@ from src.utils.audio import common_audio_loader, common_audio_transform
 class AudioDatasetFolder(torchvision.datasets.DatasetFolder):
     def __init__(
         self,
+        name="",
         root_dir="./data/ncs",
         transform=None,
         sr=44100,

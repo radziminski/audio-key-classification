@@ -16,6 +16,21 @@ transform:
   bins_per_octave: 24
   fmin: 65.41
 
+images_dir: ${paths.images_dir}
+images_preparers:
+  ncs_test:
+    images_dir: ${paths.ncs_images_test_dir}
+    dataset_name: 'ncs_train_dataset'
+  ncs_train:
+    images_dir: ${paths.ncs_images_train_dir}
+    dataset_name: 'ncs_test_dataset'
+  gs_mtg:
+    images_dir: ${paths.gs_mtg_images_dir}
+    dataset_name: 'gs_mtg_dataset'
+  gs_key:
+    images_dir: ${paths.gs_key_images_dir}
+    dataset_name: 'gs_key_dataset'
+
 defaults:
   - test_datasets:
       - ncs_test_dataset
