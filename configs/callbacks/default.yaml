@@ -16,9 +16,9 @@ model_checkpoint:
 
 early_stopping:
   monitor: 'val/acc'
-  patience: 5
+  patience: 7
   mode: 'max'
-  min_delta: 0.009
+  min_delta: 0.01
   verbose: True
 
 model_summary:
