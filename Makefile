@@ -71,6 +71,28 @@ train: ## Train the model
 train-from-checkpoint: ## Train the model from checkpoint
 	python src/train.py ckpt_path='checkpoints/best.ckpt'
 
+train-audio: ## Train the model with AudioDataModule
+	python src/train.py datamodule_type='audio'
+
+train-audio-ncs-only: ## Train the model with audio and only NCS dataset
+	python src/train.py \
+    	"datamodule/audio/train_datasets=[ncs_train_dataset]"
+
+train-audio-gs_mtg-only: ## Train the model with audio and only GS MTG dataset
+	python src/train.py \
+    	"datamodule/audio/train_datasets=[gs_mtg_dataset]"
+
+train-images: ## Train the model with ImageDataModule
+	python src/train.py datamodule_type='image'
+
+train-images-ncs-only: ## Train the model with images and only NCS dataset
+	python src/train.py \
+    	"datamodule/image/train_datasets=[ncs_train_dataset]"
+
+train-images-gs_mtg-only: ## Train the model with images and only GS MTG dataset
+	python src/train.py \
+    	"datamodule/image/train_datasets=[gs_mtg_dataset]"
+
 test-default: ## Test model by running 1 full epoch
 	python src/train.py debug=fdr
 
