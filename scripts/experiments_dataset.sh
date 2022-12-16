@@ -1,5 +1,5 @@
 #!/bin/bash
-# Run experiments with different feature maps
+# Run experiments with different combinations of datasets
 
 python src/train.py \
     datamodule.image.batch_size=256 \

@@ -17,7 +17,7 @@ full: False
 tags: ['dev']
 
 # temporary
-ckpt_path: ${paths.root_dir}/checkpoints/acc=0.57.ckpt
+ckpt_path: ${paths.root_dir}/checkpoints/best.ckpt
 
 # Chooses audio or image datamodules
 datamodule_type: 'image' # 'audio' or 'image'

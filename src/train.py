@@ -1,5 +1,5 @@
 import logging
-
+import gc
 import pyrootutils
 import torch
 
@@ -25,7 +25,6 @@ log = utils.get_pylogger(__name__)
 
 @utils.task_wrapper
 def train(cfg: DictConfig) -> Tuple[dict, dict]:
-    torch.cuda.empty_cache() # to prevent RuntimeError: CUDA out of memory in between experiments
     if cfg.get("seed"):
         pl.seed_everything(cfg.seed, workers=True)
     logging.getLogger("PIL").setLevel(logging.WARNING)
@@ -99,6 +98,8 @@ def main(cfg: DictConfig) -> Optional[float]:
         metric_dict=metric_dict, metric_name=cfg.get("optimized_metric")
     )
 
+    torch.cuda.empty_cache() # to prevent RuntimeError: CUDA out of memory in between experiments
+    gc.collect()
     # return optimized metric
     return metric_value
 
