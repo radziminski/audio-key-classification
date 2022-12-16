@@ -33,7 +33,7 @@ images_preparers:
 
 defaults:
   - test_datasets:
-      - ncs_test_dataset
+#      - ncs_test_dataset
       - gs_key_dataset
   - train_datasets:
       - ncs_train_dataset

@@ -57,6 +57,7 @@ class KeyClassifier(LightningModule):
         logits = self.forward(x)
         preds = torch.argmax(logits, dim=1)
         loss = mirex.mirex_score(preds, y)
+        print(f'y: {y}, preds:{preds}')
         return loss, preds, y
 
     def training_step(self, batch, batch_idx: int):
