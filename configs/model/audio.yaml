@@ -1,4 +1,4 @@
-_target_: src.models.audio_classifier.AudioClassifier
+_target_: src.models.key_classifier.KeyClassifier
 learning_rate: 0.005
 
 optimizer:

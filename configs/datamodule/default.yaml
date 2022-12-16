@@ -1,5 +1,4 @@
 defaults:
   - audio: default.yaml
   - image: default.yaml
-  - mnist.yaml
   - _self_

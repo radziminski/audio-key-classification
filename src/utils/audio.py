@@ -86,7 +86,7 @@ def split_to_intervals(filename, output_filename_prefix, interval_length):
         for file in os.listdir(os.path.dirname(filename)):
             basename = os.path.basename(output_filename_prefix)
             if file.startswith(basename) and (
-                    file.endswith("mp3") or file.endswith("wav")
+                file.endswith("mp3") or file.endswith("wav")
             ):
                 filepath = os.path.join(os.path.dirname(filename), file)
 
@@ -196,6 +196,7 @@ def common_audio_transform(sample, transform, target_sr, target_length, device):
 
 
 def common_audio_loader(file, type="torch", device="cuda"):
+    # DEPRECATED !!! - don't use torchaudio loader, it needs outdated dependencies
     if type == "torch":
         audio, sr = torchaudio.load(file, format="mp3")
         audio.to(device)

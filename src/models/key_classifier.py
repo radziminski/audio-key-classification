@@ -5,7 +5,7 @@ from torchmetrics.classification.accuracy import Accuracy
 from src.utils import mirex
 
 
-class AudioClassifier(LightningModule):
+class KeyClassifier(LightningModule):
     def __init__(
         self,
         model,
@@ -106,7 +106,11 @@ class AudioClassifier(LightningModule):
         self.test_loss(loss)
         self.test_acc(preds, targets)
         self.log(
-            "test/loss-mirex", self.test_loss, on_step=False, on_epoch=True, prog_bar=True
+            "test/loss-mirex",
+            self.test_loss,
+            on_step=False,
+            on_epoch=True,
+            prog_bar=True,
         )
         self.log("test/acc", self.test_acc, on_step=False, on_epoch=True, prog_bar=True)
 
