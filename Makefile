@@ -19,8 +19,8 @@ format: ## Run pre-commit hooks
 install:
 	chmod +rwx scripts/install.sh && scripts/install.sh
 
-prepare: ## Download and prepare datasets 
-	python src/prepare.py \
+prepare-audio: ## Download and prepare datasets 
+	python src/scripts/prepare-audio.py \
 		datamodule.audio.preparers.ncs_preparer.download=True \
 		datamodule.audio.preparers.ncs_preparer.split=True \
 		datamodule.audio.preparers.gs_mtg_preparer.download=True \
@@ -28,23 +28,23 @@ prepare: ## Download and prepare datasets
 		datamodule.audio.preparers.gs_key_preparer.download=True \
 		datamodule.audio.preparers.gs_key_preparer.split=True
 
-prepare-ncs: ## Download and prepare NCS dataset
-	python src/prepare.py \
+prepare-ncs-audio: ## Download and prepare NCS dataset
+	python src/scripts/prepare-audio.py \
 		datamodule.audio.preparers.ncs_preparer.download=True \
 		datamodule.audio.preparers.ncs_preparer.split=True \
 
-prepare-gs-mtg: ## Download and prepare GS MTG dataset
-	python src/prepare.py \
+prepare-gs-mtg-audio: ## Download and prepare GS MTG dataset
+	python src/scripts/prepare-audio.py \
 		datamodule.audio.preparers.gs_mtg_preparer.download=True \
 		datamodule.audio.preparers.gs_mtg_preparer.split=True
 
-prepare-gs-key: ## Download and prepare GS KEY dataset
-	python src/prepare.py \
+prepare-gs-key-audio: ## Download and prepare GS KEY dataset
+	python src/scripts/prepare-audio.py \
 		datamodule.audio.preparers.gs_key_preparer.download=True \
 		datamodule.audio.preparers.gs_key_preparer.split=True
 
 prepare-images:
-	python src/prepare_images.py \
+	python src/scripts/prepare_images.py \
 	datamodule.image.download=True
 
 eval: ## Train the model
