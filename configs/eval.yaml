@@ -3,7 +3,7 @@
 defaults:
   - _self_
   - datamodule: default.yaml # choose datamodule with `test_dataloader()` for evaluation
-  - model: audio.yaml
+  - model: key.yaml
   - logger: null
   - trainer: gpu.yaml
   - paths: default.yaml

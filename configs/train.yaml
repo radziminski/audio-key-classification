@@ -5,7 +5,7 @@
 defaults:
   - _self_
   - datamodule: default.yaml
-  - model: audio.yaml
+  - model: key.yaml
   - callbacks: default.yaml
   - logger: many_loggers.yaml # set logger here or use command line (e.g. `python train.py logger=tensorboard`)
   - trainer: gpu.yaml
