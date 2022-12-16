@@ -1,5 +1,5 @@
 _target_: src.datamodules.image_datamodule.ImageDataModule
-batch_size: 16
+batch_size: 64
 num_workers: 1
 pin_memory: False
 root_dir: ${paths.data_dir}
