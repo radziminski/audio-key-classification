@@ -9,7 +9,6 @@ root = pyrootutils.setup_root(
     dotenv=True,
 )
 
-
 from typing import List, Tuple
 
 import hydra
@@ -18,13 +17,13 @@ from pytorch_lightning import LightningDataModule, LightningModule, Trainer
 from pytorch_lightning.loggers import LightningLoggerBase
 
 from src import utils
+from src.utils.eval import eval_on_full_songs
 
 log = utils.get_pylogger(__name__)
 
 
 @utils.task_wrapper
 def evaluate(cfg: DictConfig) -> Tuple[dict, dict]:
-
     assert cfg.ckpt_path
 
     logging.getLogger("PIL").setLevel(logging.WARNING)
@@ -57,7 +56,10 @@ def evaluate(cfg: DictConfig) -> Tuple[dict, dict]:
         utils.log_hyperparameters(object_dict)
 
     log.info("Starting testing!")
-    trainer.test(model=model, datamodule=datamodule, ckpt_path=cfg.ckpt_path)
+    if cfg.full:
+        eval_on_full_songs(datamodule, model, cfg.ckpt_path)
+    else:
+        trainer.test(model=model, datamodule=datamodule, ckpt_path=cfg.ckpt_path)
 
     metric_dict = trainer.callback_metrics
 

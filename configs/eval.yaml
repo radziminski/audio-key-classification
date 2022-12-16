@@ -12,6 +12,7 @@ defaults:
   - constants: default.yaml
 
 task_name: 'eval'
+full: False
 
 tags: ['dev']
 
