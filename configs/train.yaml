@@ -37,7 +37,7 @@ task_name: 'train'
 # appending lists from command line is currently not supported :(
 # https://github.com/facebookresearch/hydra/issues/1547
 tags: ['dev']
-
+experiment_name: ''
 # set False to skip model training
 train: True
 

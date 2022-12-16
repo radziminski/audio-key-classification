@@ -1,6 +1,7 @@
 import logging
 
 import pyrootutils
+import torch
 
 root = pyrootutils.setup_root(
     search_from=__file__,
@@ -24,20 +25,7 @@ log = utils.get_pylogger(__name__)
 
 @utils.task_wrapper
 def train(cfg: DictConfig) -> Tuple[dict, dict]:
-    """Trains the model. Can additionally evaluate on a testset, using best weights obtained during
-    training.
-
-    This method is wrapped in optional @task_wrapper decorator which applies extra utilities
-    before and after the call.
-
-    Args:
-        cfg (DictConfig): Configuration composed by Hydra.
-
-    Returns:
-        Tuple[dict, dict]: Dict with metrics and dict with all instantiated objects.
-    """
-
-    # set seed for random number generators in pytorch, numpy and python.random
+    torch.cuda.empty_cache() # to prevent RuntimeError: CUDA out of memory in between experiments
     if cfg.get("seed"):
         pl.seed_everything(cfg.seed, workers=True)
     logging.getLogger("PIL").setLevel(logging.WARNING)
