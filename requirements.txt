@@ -8,7 +8,6 @@ torchaudio==0.13.0
 # --------- hydra --------- #
 hydra-core==1.2.0
 hydra-colorlog==1.2.0
-hydra-optuna-sweeper==1.2.0
 
 # --------- audio --------- #
 audiofile==1.1.0
