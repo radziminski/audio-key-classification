@@ -59,8 +59,11 @@ prepare-spectrograms: ## Downloads audio data and creates spectrograms from down
 		datamodule.audio.preparers.gs_key_preparer.download=True \
 		datamodule.audio.preparers.gs_key_preparer.split=True
 
-eval: ## Train the model
+eval: ## Default eval (on song fragments)
 	python src/eval.py
+
+eval-full: ## Evaluation on full songs
+	python src/eval.py full=True
 
 train: ## Train the model
 	python src/train.py
