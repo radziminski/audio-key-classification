@@ -8,6 +8,7 @@ import tarfile
 
 
 def download(id, filename, download_type="google"):
+    print(f'Downloading from {id}...')
     if download_type == "google":
         gdown.download(id=id, output=filename)
 
@@ -30,7 +31,7 @@ def download_and_unzip(id, filename, destination, download_type="google"):
 
 
 def decompress(filename, destination):
-    print(f'Decompressing {filename}')
+    print(f'Decompressing {filename}...')
     if filename.endswith('tar.xz'):
         with tarfile.open(filename, "r:xz") as tar:
             tar.extractall(destination)
