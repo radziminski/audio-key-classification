@@ -14,7 +14,7 @@ python src/train.py \
     trainer=gpu \
     trainer.max_epochs=50 \
     model.model.num_feature_maps=20 \
-    tags="[gs_mtg_only, nf_24, test_full]" \
+    tags="[gs_mtg_only, nf_20, test_full]" \
     "datamodule/image/train_datasets=[gs_mtg_dataset]"
 
 python src/train.py \
@@ -30,5 +30,5 @@ python src/train.py \
     trainer=gpu \
     trainer.max_epochs=50 \
     model.model.num_feature_maps=20 \
-    tags="[ncs_only, nf_24, test_full]" \
+    tags="[ncs_only, nf_20, test_full]" \
     "datamodule/image/train_datasets=[ncs_train_dataset]"
