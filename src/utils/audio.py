@@ -189,7 +189,7 @@ def common_audio_transform(sample, transform, target_sr, target_length, device):
     new_audio = audio.clone().to(device)
     if transform is not None and callable(transform):
         spectrogram = transform.to(device)(new_audio)
-        spectrogram = NORMALIZE_TRANSFORM.to(device)(spectrogram)
+        # spectrogram = NORMALIZE_TRANSFORM.to(device)(spectrogram)
         return spectrogram
 
     return new_audio
