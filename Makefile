@@ -47,6 +47,18 @@ prepare-images:
 	python src/scripts/prepare_images.py \
 	datamodule.image.download=True
 
+create-spectrograms: ## Saves spectrogram images from existing audio datasets
+	python src/scripts/create_spectrograms.py 
+
+prepare-spectrograms: ## Downloads audio data and creates spectrograms from downloaded data
+	python src/scripts/create_spectrograms.py \
+		datamodule.audio.preparers.ncs_preparer.download=True \
+		datamodule.audio.preparers.ncs_preparer.split=True \
+		datamodule.audio.preparers.gs_mtg_preparer.download=True \
+		datamodule.audio.preparers.gs_mtg_preparer.split=True \
+		datamodule.audio.preparers.gs_key_preparer.download=True \
+		datamodule.audio.preparers.gs_key_preparer.split=True
+
 eval: ## Train the model
 	python src/eval.py
 

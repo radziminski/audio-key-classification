@@ -42,7 +42,7 @@ class AudioDataModule(GenericDatamodule):
             preparer.prepare()
         print("Audio data module prepare finished.")
 
-    def prepare_images(self):
+    def create_spectrograms(self):
         if not os.path.exists(self.images_dir):
             os.mkdir(self.images_dir)
 

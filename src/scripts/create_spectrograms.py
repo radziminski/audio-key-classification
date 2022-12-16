@@ -49,7 +49,7 @@ log = utils.get_pylogger(__name__)
 def main(cfg: DictConfig) -> None:
     dm = hydra.utils.instantiate(cfg.datamodule.audio)
     dm.prepare_data()
-    dm.prepare_images()
+    dm.create_spectrograms()
 
 
 if __name__ == "__main__":
