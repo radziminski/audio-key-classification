@@ -38,7 +38,6 @@ def find_params(cfg: DictConfig) -> Tuple[dict, dict]:
 
     lr = lr_finder.suggestion()
     print(f"Best initial learning rate: {lr}")
-    lr_finder.plot()
 
     tuner.scale_batch_size(model=model, datamodule=datamodule)
     print(f"Best batch size: {datamodule.batch_size}")
