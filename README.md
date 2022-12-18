@@ -13,6 +13,7 @@ Run `make install` to install all system and python requirements for this projec
 - `make clean-logs` - Clean logs
 - `make format` - Run pre-commit hooks
 - `make install` - Install all dependencies
+- `make create-ncs-dataset` - Runs script that scraps the ncs.io site and creates NCS dataset
 - `make prepare-audio` - Download and prepare datasets with mp3 audio files
 - `make prepare-ncs-audio` - Download and prepare NCS dataset
 - `make prepare-gs-mtg-audio` - Download and prepare GS MTG dataset

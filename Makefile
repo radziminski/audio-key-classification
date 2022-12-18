@@ -18,6 +18,12 @@ format: ## Run pre-commit hooks
 install:
 	chmod +rwx scripts/install.sh && scripts/install.sh
 
+create-ncs-dataset: ## Runs script that scraps the ncs.io site and creates NCS dataset
+	python src/scripts/prepare-audio.py \
+		datamodule.audio.preparers.ncs_preparer.download=False \
+		datamodule.audio.preparers.ncs_preparer.create=True \
+		datamodule.audio.preparers.ncs_preparer.split=True \
+
 prepare-audio: ## Download and prepare datasets with mp3 audio files
 	python src/scripts/prepare-audio.py \
 		datamodule.audio.preparers.ncs_preparer.download=True \
