@@ -56,14 +56,35 @@ prepare-spectrograms: ## Downloads audio files, creates and saves spectrograms i
 		datamodule.audio.preparers.gs_mtg_preparer.download=True \
 		datamodule.audio.preparers.gs_mtg_preparer.split=True \
 		datamodule.audio.preparers.gs_key_preparer.download=True \
-		datamodule.audio.preparers.gs_key_preparer.split=True \
-		datamodule.image.download=True
+		datamodule.audio.preparers.gs_key_preparer.split=True
 
 eval: ## Default eval (on song fragments)
 	python src/eval.py
 
-eval-full: ## Evaluation on full songs
+eval-full: ## Evaluation the model on full songs
 	python src/eval.py full=True
+
+eval-audio: ## Eval the model on audio files
+	python src/eval.py datamodule_type='audio'
+
+eval-audio-ncs-only: ## Eval the model on audio files and only NCS dataset
+	python src/eval.py datamodule_type='audio' \
+		"datamodule/audio/test_datasets=[ncs_test_dataset]"
+
+eval-audio-gs_key-only: ## Eval the model on audio filesand only GS Key dataset
+	python src/eval.py datamodule_type='audio' \
+		"datamodule/audio/test_datasets=[gs_key_dataset]"
+
+eval-images: ## Eval the model on spectrograms images files
+	python src/eval.py datamodule_type='image'
+
+eval-images-ncs-only: ## Eval the model with images and only NCS dataset
+	python src/eval.py \
+    	"datamodule/image/test_datasets=[ncs_test_dataset]"
+
+eval-images-gs_mtg-only: ## Eval the model with images and only GS Key dataset
+	python src/eval.py \
+    	"datamodule/image/test_datasets=[gs_key_dataset]"
 
 train: ## Train the model
 	python src/train.py
