@@ -57,6 +57,7 @@ def evaluate(cfg: DictConfig) -> Tuple[dict, dict]:
 
     log.info("Starting testing!")
     if cfg.full:
+        device = "cuda" if cfg.trainer.accelerator == "gpu" else device
         eval_on_full_songs(datamodule, model, cfg.ckpt_path)
     else:
         trainer.test(model=model, datamodule=datamodule, ckpt_path=cfg.ckpt_path)

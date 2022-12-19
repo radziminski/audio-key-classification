@@ -7,9 +7,11 @@ from src.utils.mirex import mirex_score_single
 
 log = get_pylogger(__name__)
 
-def eval_on_full_songs(datamodule, model, checkpoint_path):
+
+def eval_on_full_songs(datamodule, model, checkpoint_path, device):
     checkpoint = torch.load(checkpoint_path)
     model.load_state_dict(checkpoint["state_dict"])
+    model.to(device)
     model.eval()
 
     datamodule.prepare_data()
@@ -19,20 +21,20 @@ def eval_on_full_songs(datamodule, model, checkpoint_path):
     losses_count = 0
 
     for dataset in datamodule.instantiated_datasets:
-        losses_sum += test_dataset(dataset, model)
+        losses_sum += test_dataset(dataset, model, device)
         losses_count += 1
 
     log.info(f"MIREX score for whole test dataset: {losses_sum / losses_count}")
 
 
-def test_dataset(dataset, model):
+def test_dataset(dataset, model, device):
     previous_song_num = None
     current_batch_samples = []
     current_batch_labels = []
     losses_sum = 0
     losses_count = 0
     for index, sample in enumerate(dataset):
-        image = sample[0]
+        image = sample[0].to(device)
         label = sample[1]
         full_sample_path = dataset.samples[index][0]
         filepart = extract_filepart(full_sample_path)

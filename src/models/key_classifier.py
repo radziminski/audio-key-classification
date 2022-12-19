@@ -6,6 +6,32 @@ from torchmetrics.classification.accuracy import Accuracy
 from src.utils import mirex
 
 
+#  keys_idx_map, keys_idx_map_inv = get_maps()
+#         x, y = batch
+#         mirex_y = torch.zeros(len(y), 24).to('cuda')
+#         for index, y_true_t in enumerate(y):
+#             y_true = int(y_true_t)
+#             mirex_y[index][y_true] = 0.5
+
+#             true_key = keys_idx_map[y_true]
+#             first, second = get_perfect_fifths(true_key)
+#             first, second = keys_idx_map_inv[first], keys_idx_map_inv[second]
+
+#             relative = keys_idx_map_inv[get_relative(true_key)]
+#             parallel = keys_idx_map_inv[get_parallel(true_key)]
+
+#             mirex_y[index][first] = 0.175
+#             mirex_y[index][second] = 0.175
+#             mirex_y[index][relative] = 0.1
+#             mirex_y[index][parallel] = 0.05
+
+#         logits = self.forward(x)
+#         loss = self.criterion(logits, mirex_y)
+#         preds = torch.argmax(logits, dim=1)
+
+#         return loss, preds, y
+
+
 class KeyClassifier(LightningModule):
     def __init__(
         self,
