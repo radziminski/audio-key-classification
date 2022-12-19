@@ -74,7 +74,8 @@ def extract_filepart(full_path: str):
 def test_step(model, batch):
     x, y = batch
     logits = model.forward(x)
-    logits_sum = torch.sum(logits, dim=0)
+    logits_softmax = torch.nn.functional.softmax(logits, dim=1)
+    logits_sum = torch.sum(logits_softmax, dim=0)
     prediction = torch.argmax(logits_sum, dim=0)
     loss = mirex_score_single(prediction.item(), y[0])
     return loss, prediction, y
