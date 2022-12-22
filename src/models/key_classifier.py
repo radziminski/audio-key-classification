@@ -3,7 +3,7 @@ from pytorch_lightning import LightningModule
 from torchmetrics import MaxMetric, MeanMetric
 from torchmetrics.classification.accuracy import Accuracy
 
-from src.utils.mirex import mirex_score
+from .components.mirex_metric import MirexMetric
 
 
 class KeyClassifier(LightningModule):
@@ -27,6 +27,10 @@ class KeyClassifier(LightningModule):
         self.test_loss = MeanMetric()
         self.val_acc_best = MaxMetric()
 
+        self.train_mirex = MirexMetric()
+        self.val_mirex = MirexMetric()
+        self.test_mirex = MirexMetric()
+
     def forward(self, x: torch.Tensor):
         return self.model(x)
 
@@ -38,25 +42,28 @@ class KeyClassifier(LightningModule):
         logits = self.forward(x)
         loss = self.criterion(logits, y)
         preds = torch.argmax(logits, dim=1)
-
         return loss, preds, y
 
     def _test_step(self, batch):
         x, y = batch
         logits = self.forward(x)
         preds = torch.argmax(logits, dim=1)
-        loss = mirex_score(preds, y)
+        loss = self.criterion(logits, y)
         return loss, preds, y
 
     def training_step(self, batch, batch_idx: int):
         loss, preds, targets = self.step(batch)
         self.train_loss(loss)
         self.train_acc(preds, targets)
+        self.train_mirex(preds, targets)
         self.log(
             "train/loss", self.train_loss, on_step=False, on_epoch=True, prog_bar=True
         )
         self.log(
             "train/acc", self.train_acc, on_step=False, on_epoch=True, prog_bar=True
+        )
+        self.log(
+            "train/mirex", self.train_mirex, on_step=False, on_epoch=True, prog_bar=True
         )
 
         return {"loss": loss, "preds": preds, "targets": targets}
@@ -68,8 +75,12 @@ class KeyClassifier(LightningModule):
         loss, preds, targets = self.step(batch)
         self.val_loss(loss)
         self.val_acc(preds, targets)
+        self.val_mirex(preds, targets)
         self.log("val/loss", self.val_loss, on_step=False, on_epoch=True, prog_bar=True)
         self.log("val/acc", self.val_acc, on_step=False, on_epoch=True, prog_bar=True)
+        self.log(
+            "val/mirex", self.val_mirex, on_step=False, on_epoch=True, prog_bar=True
+        )
 
         return {"loss": loss, "preds": preds, "targets": targets}
 
@@ -82,14 +93,19 @@ class KeyClassifier(LightningModule):
         loss, preds, targets = self._test_step(batch)
         self.test_loss(loss)
         self.test_acc(preds, targets)
+        self.test_mirex(preds, targets)
+
         self.log(
-            "test/loss-mirex",
-            self.test_loss,
+            "test/loss", self.test_loss, on_step=False, on_epoch=True, prog_bar=True
+        )
+        self.log("test/acc", self.test_acc, on_step=False, on_epoch=True, prog_bar=True)
+        self.log(
+            "test/mirex",
+            self.test_mirex,
             on_step=False,
             on_epoch=True,
             prog_bar=True,
         )
-        self.log("test/acc", self.test_acc, on_step=False, on_epoch=True, prog_bar=True)
 
         return {"loss": loss, "preds": preds, "targets": targets}
 
