@@ -27,7 +27,7 @@ class KeyClassifier(LightningModule):
         self.test_loss = MeanMetric()
         self.val_acc_best = MaxMetric()
 
-    def forward(self, x: torch.Tensor):mirex_score
+    def forward(self, x: torch.Tensor):
         return self.model(x)
 
     def on_train_start(self):
