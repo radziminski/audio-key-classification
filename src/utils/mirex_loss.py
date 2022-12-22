@@ -15,7 +15,7 @@ PARALLEL_WEIGHT = 0.2
 INCORRECT_WEIGHT = 0
 
 
-def get_mirex_classes_weights(y_true):
+def get_mirex_classes_weights(g):
     batch_size = len(y_true)
     mirex_weights = torch.zeros(batch_size, 24) + INCORRECT_WEIGHT
 
@@ -23,7 +23,7 @@ def get_mirex_classes_weights(y_true):
         y_true_index = int(y_true_single)
         mirex_weights[index][y_true_index] = CORRECT_WEIGHT
 
-        true_key = keys_idx_map[y_true]
+        true_key = keys_idx_map[y_true_index]
         perfect_first, perfect_second = get_perfect_fifths(true_key)
         perfect_first_index = keys_idx_map_inv[perfect_first]
         perfect_second_index = keys_idx_map_inv[perfect_second]
