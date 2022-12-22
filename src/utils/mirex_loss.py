@@ -61,9 +61,11 @@ def mirex_loss_v2(y_predictions, y_true, criterion, device="cuda"):
     mirex_weights[mirex_weights != 1] = 1 - mirex_weights[mirex_weights != 1]
 
     y_true_one_hot_encoded = torch.zeros((len(y_true), 24), device=device)
-    y_true_one_hot_encoded[:][y_true] = 1
+
+    for index, y_true_single in enumerate(y_true):
+        y_true_one_hot_encoded[index][y_true_single] = 1
 
     x_soft_maxed = torch.nn.functional.softmax(y_predictions, dim=1)
-    loss_per_logit = criterion(x_soft_maxed, y_true)
+    loss_per_logit = criterion(x_soft_maxed, y_true_one_hot_encoded)
 
     return (loss_per_logit[:] * mirex_weights).mean()
