@@ -15,7 +15,7 @@ class MirexLoss(torch.nn.Module):
         self.device = "cuda" if device == "gpu" else device
         self.criterion = (
             torch.nn.CrossEntropyLoss()
-            if version == "v1"
+            if version == "v0"
             else torch.nn.BCEWithLogitsLoss(reduction="none")
         )
 
