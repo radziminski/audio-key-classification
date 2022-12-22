@@ -15,7 +15,7 @@ PARALLEL_WEIGHT = 0.2
 INCORRECT_WEIGHT = 0
 
 
-def get_mirex_classes_weights(g):
+def get_mirex_classes_weights(y_true):
     batch_size = len(y_true)
     mirex_weights = torch.zeros(batch_size, 24) + INCORRECT_WEIGHT
 
