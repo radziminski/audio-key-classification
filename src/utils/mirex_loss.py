@@ -48,7 +48,7 @@ def mirex_loss_v1(y_predictions, y_true, device="cuda"):
         x_soft_maxed, mirex_weights, reduction="none"
     )
 
-    return loss_per_logit.mean(dim=1)
+    return loss_per_logit.mean()
 
 
 def mirex_loss_v2(y_predictions, y_true, device="cuda"):
@@ -64,4 +64,4 @@ def mirex_loss_v2(y_predictions, y_true, device="cuda"):
         x_soft_maxed, y_true, reduction="none"
     )
 
-    return (loss_per_logit[:] * mirex_weights).mean(dim=1)
+    return (loss_per_logit[:] * mirex_weights).mean()
