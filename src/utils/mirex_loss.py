@@ -40,18 +40,22 @@ def get_mirex_classes_weights(y_true):
     return mirex_weights
 
 
-def mirex_loss_v1(y_predictions, y_true, device="cuda"):
+def mirex_loss_v0(y_predictions, y_true, criterion, device="cuda"):
+    mirex_weights = get_mirex_classes_weights(y_true).to(device)
+
+    return criterion(y_predictions, mirex_weights)
+
+
+def mirex_loss_v1(y_predictions, y_true, criterion, device="cuda"):
     mirex_weights = get_mirex_classes_weights(y_true).to(device)
 
     x_soft_maxed = torch.nn.functional.softmax(y_predictions, dim=1)
-    loss_per_logit = F.binary_cross_entropy_with_logits(
-        x_soft_maxed, mirex_weights, reduction="none"
-    )
+    loss_per_logit = criterion(x_soft_maxed, mirex_weights)
 
     return loss_per_logit.mean()
 
 
-def mirex_loss_v2(y_predictions, y_true, device="cuda"):
+def mirex_loss_v2(y_predictions, y_true, criterion, device="cuda"):
     mirex_weights = get_mirex_classes_weights(y_true).to(device)
     mirex_weights[mirex_weights == 0] = 1
     mirex_weights[mirex_weights != 1] = 1 - mirex_weights[mirex_weights != 1]
@@ -60,8 +64,6 @@ def mirex_loss_v2(y_predictions, y_true, device="cuda"):
     y_true_one_hot_encoded[y_true] = 1
 
     x_soft_maxed = torch.nn.functional.softmax(y_predictions, dim=1)
-    loss_per_logit = F.binary_cross_entropy_with_logits(
-        x_soft_maxed, y_true, reduction="none"
-    )
+    loss_per_logit = criterion(x_soft_maxed, y_true)
 
     return (loss_per_logit[:] * mirex_weights).mean()
