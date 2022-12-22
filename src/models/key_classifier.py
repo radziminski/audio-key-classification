@@ -25,7 +25,7 @@ class KeyClassifier(LightningModule):
         self.train_loss = MeanMetric()
         self.val_loss = MeanMetric()
         self.test_loss = MeanMetric()
-        self.val_acc_best = MaxMetric()
+        self.val_mirex_best = MaxMetric()
 
         self.train_mirex = MirexMetric()
         self.val_mirex = MirexMetric()
@@ -35,7 +35,7 @@ class KeyClassifier(LightningModule):
         return self.model(x)
 
     def on_train_start(self):
-        self.val_acc_best.reset()
+        self.val_mirex_best.reset()
 
     def step(self, batch):
         x, y = batch
@@ -85,9 +85,9 @@ class KeyClassifier(LightningModule):
         return {"loss": loss, "preds": preds, "targets": targets}
 
     def validation_epoch_end(self, outputs):
-        acc = self.val_acc.compute()
-        self.val_acc_best(acc)
-        self.log("val/acc_best", self.val_acc_best.compute(), prog_bar=True)
+        mirex = self.val_mirex.compute()
+        self.val_mirex_best(mirex)
+        self.log("val/mirex_best", self.val_mirex_best.compute(), prog_bar=True)
 
     def test_step(self, batch, batch_idx: int):
         loss, preds, targets = self._test_step(batch)

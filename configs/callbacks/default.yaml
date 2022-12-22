@@ -7,15 +7,15 @@ defaults:
 
 model_checkpoint:
   dirpath: ${paths.output_dir}/checkpoints
-  filename: 'epoch_{epoch:03d}-val_acc={val/acc:.2f}'
-  monitor: 'val/acc'
+  filename: 'epoch_{epoch:03d}-val_mirex-{val/mirex:.2f}'
+  monitor: 'val/mirex'
   mode: 'max'
   save_last: True
   auto_insert_metric_name: True
   every_n_epochs: 2
 
 early_stopping:
-  monitor: 'val/acc'
+  monitor: 'val/mirex'
   patience: 7
   mode: 'max'
   min_delta: 0.01
