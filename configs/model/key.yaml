@@ -23,9 +23,8 @@ model:
 
 criterion:
   _target_: torch.nn.CrossEntropyLoss
-
-criterion:
-  _target_: src.models.components.mirex_loss.MirexLoss
-  device: ${trainer.acceleratorg}
-  version: v1 # v1 or v2
+# criterion:
+#   _target_: src.models.components.mirex_loss.MirexLoss
+#   device: ${trainer.accelerator}
+#   version: v1 # v1 or v2
 
