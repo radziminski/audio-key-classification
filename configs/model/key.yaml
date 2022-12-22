@@ -1,6 +1,14 @@
 _target_: src.models.key_classifier.KeyClassifier
 learning_rate: 0.001
 
+# criterion:
+#   _target_: torch.nn.CrossEntropyLoss
+
+criterion:
+  _target_: src.models.components.mirex_loss.MirexLoss
+  device: ${trainer.accelerator}
+  version: v1 # v1 or v2
+
 optimizer:
   _target_: torch.optim.Adam
   _partial_: true
@@ -20,11 +28,3 @@ model:
   dropout_rate: 0.1
   input_channels: 1
   num_classes: 24
-
-criterion:
-  _target_: torch.nn.CrossEntropyLoss
-# criterion:
-#   _target_: src.models.components.mirex_loss.MirexLoss
-#   device: ${trainer.accelerator}
-#   version: v1 # v1 or v2
-

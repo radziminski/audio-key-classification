@@ -40,13 +40,8 @@ def get_mirex_classes_weights(y_true):
     return mirex_weights
 
 
-MIREX_CLASS_WEIGHTS = [
-    get_mirex_classes_weights(class_index) for class_index in range(24)
-]
-
-
 def mirex_loss_v1(y_predictions, y_true, device="cuda"):
-    mirex_weights = MIREX_CLASS_WEIGHTS[y_true].to(device)
+    mirex_weights = get_mirex_classes_weights(y_true).to(device)
 
     x_soft_maxed = torch.nn.functional.softmax(y_predictions, dim=1)
     loss_per_logit = F.binary_cross_entropy_with_logits(
@@ -57,7 +52,7 @@ def mirex_loss_v1(y_predictions, y_true, device="cuda"):
 
 
 def mirex_loss_v2(y_predictions, y_true, device="cuda"):
-    mirex_weights = MIREX_CLASS_WEIGHTS[y_true].to(device)
+    mirex_weights = get_mirex_classes_weights(y_true).to(device)
     mirex_weights[mirex_weights == 0] = 1
     mirex_weights[mirex_weights != 1] = 1 - mirex_weights[mirex_weights != 1]
 
