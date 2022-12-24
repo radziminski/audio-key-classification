@@ -19,13 +19,13 @@ install:
 	chmod +rwx scripts/install.sh && scripts/install.sh
 
 create-ncs-dataset: ## Runs script that scraps the ncs.io site and creates NCS dataset
-	python src/scripts/prepare-audio.py \
+	python src/scripts/prepare_audio.py \
 		datamodule.audio.preparers.ncs_preparer.download=False \
 		datamodule.audio.preparers.ncs_preparer.create=True \
 		datamodule.audio.preparers.ncs_preparer.split=True \
 
 prepare-audio: ## Download and prepare datasets with mp3 audio files
-	python src/scripts/prepare-audio.py \
+	python src/scripts/prepare_audio.py \
 		datamodule.audio.preparers.ncs_preparer.download=True \
 		datamodule.audio.preparers.ncs_preparer.split=True \
 		datamodule.audio.preparers.gs_mtg_preparer.download=True \
@@ -34,17 +34,17 @@ prepare-audio: ## Download and prepare datasets with mp3 audio files
 		datamodule.audio.preparers.gs_key_preparer.split=True
 
 prepare-ncs-audio: ## Download and prepare NCS dataset
-	python src/scripts/prepare-audio.py \
+	python src/scripts/prepare_audio.py \
 		datamodule.audio.preparers.ncs_preparer.download=True \
 		datamodule.audio.preparers.ncs_preparer.split=True \
 
 prepare-gs-mtg-audio: ## Download and prepare GS MTG dataset
-	python src/scripts/prepare-audio.py \
+	python src/scripts/prepare_audio.py \
 		datamodule.audio.preparers.gs_mtg_preparer.download=True \
 		datamodule.audio.preparers.gs_mtg_preparer.split=True
 
 prepare-gs-key-audio: ## Download and prepare GS KEY dataset
-	python src/scripts/prepare-audio.py \
+	python src/scripts/prepare_audio.py \
 		datamodule.audio.preparers.gs_key_preparer.download=True \
 		datamodule.audio.preparers.gs_key_preparer.split=True
 
