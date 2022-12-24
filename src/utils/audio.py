@@ -187,6 +187,7 @@ def common_audio_transform(sample, transform, target_sr, target_length, device):
         audio = audio[:target_length]
 
     new_audio = audio.clone().to(device)
+
     if transform is not None and callable(transform):
         spectrogram = transform.to(device)(new_audio)
         # spectrogram = NORMALIZE_TRANSFORM.to(device)(spectrogram)
@@ -204,8 +205,7 @@ def common_audio_loader(file, type="torch", device="cuda"):
         return audio, sr
 
     audio, sr = audiofile.read(file)
-    audio = torch.tensor(audio, dtype=torch.float)
-    audio.to(device)
+    audio = torch.tensor(audio, dtype=torch.float, device=device)
 
     return audio, sr
 

@@ -32,6 +32,20 @@ gs_mtg_images_dir: ${paths.images_dir}/gs_mtg
 # GS Key
 gs_key_images_dir: ${paths.images_dir}/gs_key
 
+# ======== Tensors ===========
+torch_dir: ${paths.root_dir}/data/torch
+
+# NCS
+ncs_torch_root_dir: ${paths.torch_dir}/ncs
+ncs_torch_train_dir: ${paths.ncs_torch_root_dir}/train/
+ncs_torch_test_dir: ${paths.ncs_torch_root_dir}/validation/
+
+# GS MTG
+gs_mtg_torch_dir: ${paths.torch_dir}/gs_mtg
+
+# GS Key
+gs_key_torch_dir: ${paths.torch_dir}/gs_key
+
 # ******** Logs ********
 # path to logging directory
 log_dir: ${paths.root_dir}/logs/

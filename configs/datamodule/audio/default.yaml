@@ -31,9 +31,24 @@ images_preparers:
     images_dir: ${paths.gs_key_images_dir}
     dataset_name: 'gs_key_dataset'
 
+torch_dir: ${paths.torch_dir}
+torch_preparers:
+  ncs_test:
+    torch_dir: ${paths.ncs_torch_test_dir}
+    dataset_name: 'ncs_train_dataset'
+  ncs_train:
+    torch_dir: ${paths.ncs_torch_train_dir}
+    dataset_name: 'ncs_test_dataset'
+  gs_mtg:
+    torch_dir: ${paths.gs_mtg_torch_dir}
+    dataset_name: 'gs_mtg_dataset'
+  gs_key:
+    torch_dir: ${paths.gs_key_torch_dir}
+    dataset_name: 'gs_key_dataset'
+
 defaults:
   - test_datasets:
-#      - ncs_test_dataset
+      #      - ncs_test_dataset
       - gs_key_dataset
   - train_datasets:
       - ncs_train_dataset
