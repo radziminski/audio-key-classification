@@ -32,8 +32,8 @@ gs_mtg_images_dir: ${paths.images_dir}/gs_mtg
 # GS Key
 gs_key_images_dir: ${paths.images_dir}/gs_key
 
-# ======== Tensors ===========
-torch_dir: ${paths.root_dir}/data/torch
+# ======== Audio Tensors ===========
+torch_dir: ${paths.root_dir}/data/torch-audio
 
 # NCS
 ncs_torch_root_dir: ${paths.torch_dir}/ncs
