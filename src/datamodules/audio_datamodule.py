@@ -68,6 +68,9 @@ class AudioDataModule(GenericDatamodule):
             idx_to_class = {v: k for k, v in dataset.class_to_idx.items()}
 
             for index, entry in enumerate(dataset):
+                if entry is None:
+                    continue
+
                 sample, label = entry
                 audio_tensor = sample[0].clone()
                 key_dir = idx_to_class[label]
@@ -99,6 +102,9 @@ class AudioDataModule(GenericDatamodule):
             dataset = instantiate_delayed(dataset_config)
             idx_to_class = {v: k for k, v in dataset.class_to_idx.items()}
             for index, entry in enumerate(dataset):
+                if entry is None:
+                    continue
+
                 sample, label = entry
                 image = sample[0]
                 key_dir = idx_to_class[label]
