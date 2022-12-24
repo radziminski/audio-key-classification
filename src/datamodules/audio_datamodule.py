@@ -68,7 +68,7 @@ class AudioDataModule(GenericDatamodule):
             idx_to_class = {v: k for k, v in dataset.class_to_idx.items()}
 
             for index, entry in enumerate(dataset):
-                if entry is None:
+                if entry is None or entry[0] is None:
                     continue
 
                 sample, label = entry
@@ -102,7 +102,7 @@ class AudioDataModule(GenericDatamodule):
             dataset = instantiate_delayed(dataset_config)
             idx_to_class = {v: k for k, v in dataset.class_to_idx.items()}
             for index, entry in enumerate(dataset):
-                if entry is None:
+                if entry is None or entry[0] is None:
                     continue
 
                 sample, label = entry
