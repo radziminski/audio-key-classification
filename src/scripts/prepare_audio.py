@@ -1,8 +1,4 @@
-import hydra
 import pyrootutils
-from omegaconf import DictConfig
-
-from src import utils
 
 root = pyrootutils.setup_root(
     search_from=__file__,
@@ -10,6 +6,12 @@ root = pyrootutils.setup_root(
     pythonpath=True,
     dotenv=True,
 )
+
+import hydra
+from omegaconf import DictConfig
+
+from src import utils
+
 
 log = utils.get_pylogger(__name__)
 
