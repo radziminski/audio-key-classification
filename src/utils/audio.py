@@ -166,6 +166,9 @@ NORMALIZE_TRANSFORM = transforms.Normalize((0.94025,), (2.21655,))
 
 # New version with torchaudio
 def common_audio_transform(sample, transform, target_sr, target_length, device):
+    if sample is None:
+        return None
+
     audio, sr = sample
 
     if len(audio.shape) > 1:
@@ -197,17 +200,21 @@ def common_audio_transform(sample, transform, target_sr, target_length, device):
 
 
 def common_audio_loader(file, type="torch", device="cuda"):
-    # DEPRECATED !!! - don't use torchaudio loader, it needs outdated dependencies
-    if type == "torch":
-        audio, sr = torchaudio.load(file, format="mp3")
-        audio.to(device)
+    try:
+        # DEPRECATED !!! - don't use torchaudio loader, it needs outdated dependencies
+        if type == "torch":
+            audio, sr = torchaudio.load(file, format="mp3")
+            audio.to(device)
+
+            return audio, sr
+
+        audio, sr = audiofile.read(file)
+        audio = torch.tensor(audio, dtype=torch.float, device=device)
 
         return audio, sr
-
-    audio, sr = audiofile.read(file)
-    audio = torch.tensor(audio, dtype=torch.float, device=device)
-
-    return audio, sr
+    except:
+        print(f"Error reading {file} - skipping...")
+        return None
 
 
 def try_delete_dir(dir):
