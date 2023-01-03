@@ -17,7 +17,7 @@ class TorchDatasetFolder(torchvision.datasets.DatasetFolder):
 
         super(TorchDatasetFolder, self).__init__(
             root_dir,
-            loader=torch.load,
+            loader=loader,
             extensions=(".pt"),
             transform=transform,
         )
