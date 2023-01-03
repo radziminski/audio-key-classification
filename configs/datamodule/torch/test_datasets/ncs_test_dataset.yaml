@@ -1,3 +1,4 @@
 ncs_test_dataset:
   target: src.datamodules.common.dataset.torch_dataset_folder.TorchDatasetFolder
   root_dir: ${paths.ncs_torch_test_dir_processed}
+  device: ${trainer.accelerator}

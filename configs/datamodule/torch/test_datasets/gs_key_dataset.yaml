@@ -1,3 +1,4 @@
 gs_key_dataset:
   target: src.datamodules.common.dataset.torch_dataset_folder.TorchDatasetFolder
   root_dir: ${paths.gs_key_torch_dir_processed}
+  device: ${trainer.accelerator}
