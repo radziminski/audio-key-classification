@@ -13,7 +13,10 @@ class TorchDatasetFolder(torchvision.datasets.DatasetFolder):
         self.root = root_dir
 
         device = "cuda" if device == "gpu" else device
-        loader = lambda *args: torch.load(args).float()
+
+        def loader(path):
+            with open(path, "rb") as file:
+                return torch.load(file).float()
 
         super(TorchDatasetFolder, self).__init__(
             root_dir,

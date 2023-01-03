@@ -61,7 +61,7 @@ class CQTAllConv(nn.Module):
         self.global_pool_avg = nn.AdaptiveAvgPool2d(1)
 
     def forward(self, x):
-        x = self.cqt(x)
+        x = self.cqt(x).unsqueeze(1)
         x = F.elu(self.conv1(x))
         x = self.bn1(x)
         x = F.elu(self.conv2(x))
