@@ -52,4 +52,4 @@ ckpt_path: null
 seed: 123456
 
 # Chooses audio or image datamodules
-datamodule_type: 'image' # 'audio' or 'image'
+datamodule_type: 'image' # 'audio' or 'image' or 'tensor'

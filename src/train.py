@@ -36,6 +36,9 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
     if cfg.datamodule_type == "audio":
         log.info(f"Instantiating datamodule <{cfg.datamodule.audio._target_}>")
         datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule.audio)
+    if cfg.datamodule_type == "tensor":
+        log.info(f"Instantiating datamodule <{cfg.datamodule.torch._target_}>")
+        datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule.torch)
 
     log.info(f"Instantiating model <{cfg.model._target_}>")
     model: LightningModule = hydra.utils.instantiate(cfg.model)
@@ -98,7 +101,7 @@ def main(cfg: DictConfig) -> Optional[float]:
         metric_dict=metric_dict, metric_name=cfg.get("optimized_metric")
     )
 
-    torch.cuda.empty_cache() # to prevent RuntimeError: CUDA out of memory in between experiments
+    torch.cuda.empty_cache()  # to prevent RuntimeError: CUDA out of memory in between experiments
     gc.collect()
     # return optimized metric
     return metric_value

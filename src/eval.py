@@ -33,6 +33,8 @@ def evaluate(cfg: DictConfig) -> Tuple[dict, dict]:
         datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule.image)
     if cfg.datamodule_type == "audio":
         datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule.audio)
+    if cfg.datamodule_type == "tensor":
+        datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule.torch)
 
     log.info(f"Instantiating model <{cfg.model._target_}>")
     model: LightningModule = hydra.utils.instantiate(cfg.model)
