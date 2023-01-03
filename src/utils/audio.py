@@ -164,6 +164,24 @@ def common_audio_transform_old(sample, transform, target_sr, target_length, devi
 NORMALIZE_TRANSFORM = transforms.Normalize((0.94025,), (2.21655,))
 
 
+def convert_to_mono(audio):
+    if len(audio.shape) > 1:
+        audio = audio.mean(axis=0)
+        return audio
+
+    return audio
+
+
+def resample(audio, sr, target_sr, device):
+    if sr == target_sr:
+        return audio
+
+    resampler = torchaudio.transforms.Resample(sr, target_sr).to(device)
+    audio = resampler(audio)
+
+    return audio
+
+
 # New version with torchaudio
 def common_audio_transform(sample, transform, target_sr, target_length, device):
     if sample is None:
@@ -171,13 +189,8 @@ def common_audio_transform(sample, transform, target_sr, target_length, device):
 
     audio, sr = sample
 
-    if len(audio.shape) > 1:
-        audio = audio.mean(axis=0)
-
-    # Resample audio to target_sr (44100) sample rate, so that all inputs have the same size
-    if sr != target_sr:
-        resampler = torchaudio.transforms.Resample(sr, target_sr).to(device)
-        audio = resampler(audio)
+    audio = convert_to_mono(audio)
+    audio = resample(audio, sr, target_sr, device)
 
     # FFMPEG does not cut the files into intervals perfectly - there are some minor
     # correction needed:
@@ -225,3 +238,27 @@ def try_delete_dir(dir):
         )
     except:
         return
+
+
+def save_mp3_to_tensor(
+    filename,
+    destination_filename,
+    target_sr=None,
+    type="torch",
+    device="cuda",
+):
+    loaded_sample = common_audio_loader(filename, type, device)
+
+    if loaded_sample is None:
+        return None
+
+    audio, sr = loaded_sample
+
+    audio = convert_to_mono(audio)
+    if target_sr is not None:
+        audio = resample(audio, sr, target_sr, device)
+
+    audio = audio.clone()
+    audio = audio.to(torch.float16)
+
+    torch.save(audio, destination_filename)

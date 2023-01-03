@@ -1,4 +1,5 @@
 defaults:
   - audio: default.yaml
   - image: default.yaml
+  - torch: default.yaml
   - _self_

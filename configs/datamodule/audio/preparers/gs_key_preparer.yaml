@@ -1,6 +1,6 @@
 gs_key_preparer:
   _target_: src.datamodules.gs_key.preparer.gs_key_preparer.GS_KeyPreparer
-  data_dir: ${paths.data_dir}
+  data_dir: ${paths.audio_dir}
   root_dir: ${paths.gs_key_root_dir}
 
   extensions: ${datamodule.audio.extensions}

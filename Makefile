@@ -27,11 +27,14 @@ create-ncs-dataset: ## Runs script that scraps the ncs.io site and creates NCS d
 prepare-audio: ## Download and prepare datasets with mp3 audio files
 	python src/scripts/prepare_audio.py \
 		datamodule.audio.preparers.ncs_preparer.download=True \
-		datamodule.audio.preparers.ncs_preparer.split=True \
 		datamodule.audio.preparers.gs_mtg_preparer.download=True \
+		datamodule.audio.preparers.gs_key_preparer.download=True 
+
+split-audio:
+	python src/scripts/prepare_audio.py \
+		datamodule.audio.preparers.ncs_preparer.split=True \
 		datamodule.audio.preparers.gs_mtg_preparer.split=True \
-		datamodule.audio.preparers.gs_key_preparer.download=True \
-		datamodule.audio.preparers.gs_key_preparer.split=True
+		datamodule.audio.preparers.gs_key_preparer.split=True 
 
 prepare-ncs-audio: ## Download and prepare NCS dataset
 	python src/scripts/prepare_audio.py \

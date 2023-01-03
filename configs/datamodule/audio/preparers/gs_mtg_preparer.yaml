@@ -1,6 +1,6 @@
 gs_mtg_preparer:
   _target_: src.datamodules.gs_mtg.preparer.gs_mtg_preparer.GS_MTGPreparer
-  data_dir: ${paths.data_dir}
+  data_dir: ${paths.audio_dir}
   root_dir: ${paths.gs_mtg_root_dir}
 
   extensions: ${datamodule.audio.extensions}

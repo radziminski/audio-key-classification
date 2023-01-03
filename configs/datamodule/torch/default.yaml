@@ -1,0 +1,27 @@
+_target_: src.datamodules.torch_datamodule.TorchDataModule
+batch_size: 64
+num_workers: 1
+pin_memory: False
+root_dir: ${paths.data_dir}
+
+gs_mtg_torch_urls: ${constants.gs_mtg_torch_urls}
+gs_key_torch_urls: ${constants.gs_key_torch_urls}
+
+download: False
+torch_dir: ${paths.torch_dir}
+
+process: False
+torch_dir_processed: ${paths.torch_dir_processed}
+interval_length: 30
+sr: 44100
+# augmentations:
+#   - pitch_shift:
+#       _target_:
+
+defaults:
+  - test_datasets:
+      - ncs_test_dataset
+      - gs_key_dataset
+  - train_datasets:
+      - ncs_train_dataset
+      - gs_mtg_dataset

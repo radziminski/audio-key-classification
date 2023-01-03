@@ -6,6 +6,7 @@ sr: 44100
 extensions: ['.wav', '.mp3', '.flac', '.ogg']
 interval_length: 30
 loader_type: 'audiofile' # 'audiofile' or 'torch' - 'torch' needs lots of different dependencies, omit using it
+device: ${trainer.accelerator}
 
 transform:
   _target_: nnAudio.features.cqt.CQT
@@ -15,6 +16,8 @@ transform:
   n_bins: 120
   bins_per_octave: 24
   fmin: 65.41
+
+audio_dir: ${paths.audio_dir}
 
 images_dir: ${paths.images_dir}
 images_preparers:
@@ -32,23 +35,10 @@ images_preparers:
     dataset_name: 'gs_key_dataset'
 
 torch_dir: ${paths.torch_dir}
-torch_preparers:
-  ncs_test:
-    torch_dir: ${paths.ncs_torch_test_dir}
-    dataset_name: 'ncs_train_dataset'
-  ncs_train:
-    torch_dir: ${paths.ncs_torch_train_dir}
-    dataset_name: 'ncs_test_dataset'
-  gs_mtg:
-    torch_dir: ${paths.gs_mtg_torch_dir}
-    dataset_name: 'gs_mtg_dataset'
-  gs_key:
-    torch_dir: ${paths.gs_key_torch_dir}
-    dataset_name: 'gs_key_dataset'
 
 defaults:
   - test_datasets:
-      #      - ncs_test_dataset
+      - ncs_test_dataset
       - gs_key_dataset
   - train_datasets:
       - ncs_train_dataset

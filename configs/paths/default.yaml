@@ -2,24 +2,25 @@
 # this requires PROJECT_ROOT environment variable to exist
 # PROJECT_ROOT is inferred and set by pyrootutils package in `train.py` and `eval.py`
 root_dir: ${oc.env:PROJECT_ROOT}
+data_dir: ${paths.root_dir}/data/
 
 # ******** Datasets ********
 # ======== Audio ===========
-data_dir: ${paths.root_dir}/data/
+audio_dir: ${paths.root_dir}/data/audio
 
 # NCS
-ncs_root_dir: ${paths.root_dir}/data/ncs
+ncs_root_dir: ${paths.audio_dir}/ncs
 ncs_train_dir: ${paths.ncs_root_dir}/train/
 ncs_test_dir: ${paths.ncs_root_dir}/validation/
 
 # GS MTG
-gs_mtg_root_dir: ${paths.root_dir}/data/gs_mtg
+gs_mtg_root_dir: ${paths.audio_dir}/gs_mtg
 
 # GS Key
-gs_key_root_dir: ${paths.root_dir}/data/gs_key
+gs_key_root_dir: ${paths.audio_dir}/gs_key
 
 # ======== Images ===========
-images_dir: ${paths.root_dir}/data/images
+images_dir: ${paths.audio_dir}/images
 
 # NCS
 ncs_images_root_dir: ${paths.images_dir}/ncs
@@ -34,17 +35,23 @@ gs_key_images_dir: ${paths.images_dir}/gs_key
 
 # ======== Audio Tensors ===========
 torch_dir: ${paths.root_dir}/data/torch-audio
+torch_dir_processed: ${paths.root_dir}/data/torch-audio-processed
 
 # NCS
 ncs_torch_root_dir: ${paths.torch_dir}/ncs
+ncs_torch_root_dir_processed: ${paths.torch_dir_processed}/ncs
 ncs_torch_train_dir: ${paths.ncs_torch_root_dir}/train/
+ncs_torch_train_dir_processed: ${paths.ncs_torch_root_dir_processed}/train/
 ncs_torch_test_dir: ${paths.ncs_torch_root_dir}/validation/
+ncs_torch_test_dir_processed: ${paths.ncs_torch_root_dir_processed}/validation/
 
 # GS MTG
 gs_mtg_torch_dir: ${paths.torch_dir}/gs_mtg
+gs_mtg_torch_dir_processed: ${paths.torch_dir_processed}/gs_mtg
 
 # GS Key
 gs_key_torch_dir: ${paths.torch_dir}/gs_key
+gs_key_torch_dir_processed: ${paths.torch_dir_processed}/gs_key
 
 # ******** Logs ********
 # path to logging directory

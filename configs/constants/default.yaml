@@ -39,3 +39,20 @@ gs_key_keys_id: ${constants.gs_key_keys_s3_id}
 ncs_images_url: 'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/ncs.tar.xz'
 gs_mtg_images_url: 'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_mtg.tar.xz'
 gs_key_images_url: 'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_key.tar.xz'
+
+# TORCH
+gs_mtg_torch_urls:
+  [
+    'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_mtg_aa',
+    'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_mtg_ab',
+    'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_mtg_ac',
+    'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_mtg_ad',
+    'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_mtg_ae',
+  ]
+
+gs_key_torch_urls:
+  [
+    'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_key_aa',
+    'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_key_ab',
+    'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_key_ac',
+  ]

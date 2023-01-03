@@ -1,6 +1,6 @@
 ncs_preparer:
   _target_: src.datamodules.ncs.preparer.ncs_preparer.NCSPreparer
-  data_dir: ${paths.data_dir}
+  data_dir: ${paths.audio_dir}
   root_dir: ${paths.ncs_root_dir}
   train_dir: ${paths.ncs_train_dir}
   test_dir: ${paths.ncs_test_dir}

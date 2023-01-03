@@ -40,8 +40,7 @@ class NCSPreparer(Preparer):
     def prepare(
         self,
     ):
-        if not os.path.exists(self.data_dir):
-            os.mkdir(self.data_dir)
+        os.makedirs(self.data_dir, exist_ok=True)
 
         if self.download:
             print(f"Downloading NCS dataset from {self.download_type}...")
