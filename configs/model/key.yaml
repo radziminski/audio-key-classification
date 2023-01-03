@@ -7,7 +7,7 @@ learning_rate: 0.001
 criterion:
   _target_: src.models.components.mirex_loss.MirexLoss
   device: ${trainer.accelerator}
-  version: v1 # v1 or v2
+  version: v0 # v0, v1 or v2
 
 optimizer:
   _target_: torch.optim.Adam
