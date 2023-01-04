@@ -62,7 +62,12 @@ def test_dataset(dataset, model, device):
 
 
 def extract_song_num(filename: str):
-    match = re.match(r"^[^-]*", filename)
+    match = None
+    if "-" in filename:
+        match = re.match(r"^[^-]*", filename)
+    else:
+        match = re.match(r"^[^_]*", filename)
+
     return int(match.group(0))
 
 

@@ -1,13 +1,9 @@
 _target_: src.models.key_classifier.KeyClassifier
 learning_rate: 0.001
 
-# criterion:
-#   _target_: torch.nn.CrossEntropyLoss
-
-criterion:
-  _target_: src.models.components.mirex_loss.MirexLoss
-  device: ${trainer.accelerator}
-  version: v0 # v0, v1 or v2
+defaults:
+  - criterion: mirex_v0 # or v1 or v2 or cross_entropy
+  - model: cqt_allconv # or allconv or allconv_rnn or cqt_allconv_rnn
 
 optimizer:
   _target_: torch.optim.Adam
@@ -21,10 +17,3 @@ scheduler:
   mode: min
   factor: 0.4
   patience: 2
-
-model:
-  _target_: src.models.components.allconv.AllConv
-  num_feature_maps: 2
-  dropout_rate: 0.1
-  input_channels: 1
-  num_classes: 24

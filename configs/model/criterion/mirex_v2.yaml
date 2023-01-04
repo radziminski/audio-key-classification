@@ -1,0 +1,3 @@
+_target_: src.models.components.mirex_loss.MirexLoss
+device: ${trainer.accelerator}
+version: v2 # v0, v1 or v2

@@ -1,0 +1,5 @@
+_target_: src.models.components.cqt_allconv.CQTAllConv
+num_feature_maps: 2
+dropout_rate: 0.1
+input_channels: 1
+num_classes: 24

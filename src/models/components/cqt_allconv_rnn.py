@@ -1,9 +1,10 @@
 import torch.nn as nn
 import torch.nn.functional as F
 from nnAudio.features import CQT1992v2
+import torch
 
 
-class CQTAllConv(nn.Module):
+class CQTAllConvRnn(nn.Module):
     def __init__(
         self, num_feature_maps, dropout_rate, input_channels=1, num_classes=24
     ):
@@ -54,11 +55,20 @@ class CQTAllConv(nn.Module):
             in_channels=8 * nf, out_channels=8 * nf, kernel_size=3, padding=1
         )
         self.bn8 = nn.BatchNorm2d(8 * nf)
-        self.conv9 = nn.Conv2d(
-            in_channels=8 * nf, out_channels=num_classes, kernel_size=1, padding=1
+        # self.conv9 = nn.Conv2d(in_channels=8 * nf, out_channels=num_classes, kernel_size=1, padding=1)
+        # self.bn9 = nn.BatchNorm2d(num_classes)
+        # self.global_pool_avg = nn.AdaptiveAvgPool2d(1)
+
+        self.hidden_size = 8 * nf
+
+        self.rnn = nn.LSTM(
+            input_size=14 * 80,
+            hidden_size=self.hidden_size,
+            num_layers=2,
+            batch_first=True,
         )
-        self.bn9 = nn.BatchNorm2d(num_classes)
-        self.global_pool_avg = nn.AdaptiveAvgPool2d(1)
+        self.bn9 = nn.BatchNorm1d(self.hidden_size)
+        self.fc = nn.Linear(self.hidden_size, 24)
 
     def forward(self, x):
         x = self.cqt(x).unsqueeze(1)
@@ -89,9 +99,25 @@ class CQTAllConv(nn.Module):
 
         x = F.elu(self.conv8(x))
         x = self.bn8(x)
-        x = F.dropout(x, p=self.dropout_rate)
 
-        x = F.elu(self.conv9(x))
+        h0 = torch.zeros(2, len(x), self.hidden_size, dtype=torch.float).to("cuda")
+        c0 = torch.zeros(2, len(x), self.hidden_size, dtype=torch.float).to("cuda")
+
+        x = x.view(-1, self.hidden_size, 14 * 80)
+
+        out, _ = self.rnn(x, (h0, c0))
+
+        # Get final hidden state
+        x = out[:, -1, :]
+
+        # Classify
         x = self.bn9(x)
-        x = self.global_pool_avg(x).squeeze(3).squeeze(2)
+        x = self.fc(x)
+        x = F.relu(x)
+
+        # x = F.dropout(x, p=self.dropout_rate)
+
+        # x = F.elu(self.conv9(x))
+        # x = self.bn9(x)
+        # x = self.global_pool_avg(x).squeeze(3).squeeze(2)
         return x
