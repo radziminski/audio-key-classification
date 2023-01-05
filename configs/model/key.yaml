@@ -3,7 +3,7 @@ learning_rate: 0.001
 
 defaults:
   - criterion: mirex_v0 # or v1 or v2 or cross_entropy
-  - model: cqt_allconv # or allconv or allconv_rnn or cqt_allconv_rnn
+  - model: allconv # or allconv or allconv_rnn or cqt_allconv_rnn
 
 optimizer:
   _target_: torch.optim.Adam
