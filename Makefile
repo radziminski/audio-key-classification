@@ -156,7 +156,7 @@ experiments-dataset: ## Run experiments with different combinations of datasets
 	scripts/experiments_nf.sh
 
 experiments-fine-tuned: ## Run experiments with different combinations of datasets
-	scripts/experiments_nf.sh
+	scripts/experiments_fine_tuned.sh
 
 tune-batch-size: ## find optimal batch_size such that doesn't cause out of memory exception
 	python src/tune.py ++trainer.auto_scale_batch_size='power'
