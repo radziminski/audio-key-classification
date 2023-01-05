@@ -21,3 +21,4 @@ deterministic: False
 gradient_clip_val: 0
 accumulate_grad_batches: 1
 auto_scale_batch_size: None
+auto_lr_find: False
