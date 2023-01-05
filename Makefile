@@ -52,7 +52,7 @@ prepare-gs-key-audio: ## Download and prepare GS KEY dataset
 		datamodule.audio.preparers.gs_key_preparer.split=True
 
 prepare-images: ## Download images with precomputed spectrograms for each dataset
-	python src/scripts/prepare_images.py \
+	mkdir -p data/audio/images && python src/scripts/prepare_images.py \
 	datamodule.image.download=True
 
 create-spectrograms: ## Create and save spectrogram images from existing audio files in all datasets
