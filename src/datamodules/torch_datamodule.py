@@ -103,7 +103,7 @@ class TorchDataModule(GenericDatamodule):
                     source_path = os.path.join(root, file)
                     destination_path = os.path.join(destination_dir, str(index))
 
-                    audio = torch.load(source_path)
+                    audio = torch.load(source_path).to(self.device)
                     intervals = torch.split(
                         audio, split_size_or_sections=interval_samples
                     )
