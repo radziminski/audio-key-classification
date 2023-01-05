@@ -19,6 +19,7 @@ class TorchDataModule(GenericDatamodule):
         test_datasets=None,
         # ncs_images_url="",
         gs_mtg_torch_urls=[],
+        ncs_torch_urls=[],
         gs_key_torch_urls=[],
         torch_dir="torch",
         download=False,
@@ -26,6 +27,8 @@ class TorchDataModule(GenericDatamodule):
         torch_dir_processed="torch-processed",
         interval_length=30,
         sr=44100,
+        transform=None,
+        device="gpu",
     ):
         super().__init__(
             batch_size,
@@ -37,6 +40,8 @@ class TorchDataModule(GenericDatamodule):
             test_datasets,
         )
         self.preparers = preparers if preparers is not None else []
+        self.transform = transform
+        self.device = "cuda" if device == "gpu" else device
 
     def prepare_data(self):
         if self.hparams.download:
@@ -68,6 +73,14 @@ class TorchDataModule(GenericDatamodule):
             "url",
         )
 
+        download_and_unzip_parts(
+            self.hparams.ncs_torch_urls,
+            os.path.join(self.hparams.torch_dir, "ncs_"),
+            os.path.join(self.hparams.torch_dir, "ncs.zip"),
+            self.hparams.torch_dir,
+            "url",
+        )
+
     def _process_data(self):
         interval_samples = self.hparams.interval_length * self.hparams.sr
 
@@ -85,10 +98,10 @@ class TorchDataModule(GenericDatamodule):
             if not os.path.exists(destination_dir):
                 os.makedirs(destination_dir)
 
-            for file in files:
+            for index, file in enumerate(files):
                 if file.endswith(".pt"):
                     source_path = os.path.join(root, file)
-                    destination_path = os.path.join(destination_dir, file)
+                    destination_path = os.path.join(destination_dir, str(index))
 
                     audio = torch.load(source_path)
                     intervals = torch.split(
@@ -97,7 +110,9 @@ class TorchDataModule(GenericDatamodule):
 
                     for index, interval in enumerate(intervals):
                         if len(interval) == interval_samples:
-                            interval_destination_path = (
-                                f"{destination_path[:-3]}_{index}.pt"
+                            spectrogram = self.transform.to(self.device)(
+                                interval.float()
                             )
-                            torch.save(interval.clone(), interval_destination_path)
+
+                            interval_destination_path = f"{destination_path}_{index}.pt"
+                            torch.save(spectrogram.clone(), interval_destination_path)

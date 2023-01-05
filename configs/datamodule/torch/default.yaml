@@ -3,9 +3,11 @@ batch_size: 64
 num_workers: 1
 pin_memory: False
 root_dir: ${paths.data_dir}
+device: ${trainer.accelerator}
 
 gs_mtg_torch_urls: ${constants.gs_mtg_torch_urls}
 gs_key_torch_urls: ${constants.gs_key_torch_urls}
+ncs_torch_urls: ${constants.ncs_torch_urls}
 
 download: False
 torch_dir: ${paths.torch_dir}
@@ -17,6 +19,15 @@ sr: 44100
 # augmentations:
 #   - pitch_shift:
 #       _target_:
+
+transform:
+  _target_: nnAudio.features.cqt.CQT
+  hop_length: 2048
+  sr: ${datamodule.audio.sr}
+  verbose: False
+  n_bins: 120
+  bins_per_octave: 24
+  fmin: 65.41
 
 defaults:
   - test_datasets:

@@ -56,3 +56,13 @@ gs_key_torch_urls:
     'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_key_ab',
     'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/gs_key_ac',
   ]
+
+ncs_torch_urls:
+  [
+    'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/ncs_aa',
+    'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/ncs_ab',
+    'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/ncs_ac',
+    'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/ncs_ad',
+    'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/ncs_ae',
+    'https://jr-personal-stuff.s3.eu-central-1.amazonaws.com/ncs_af',
+  ]
