@@ -159,7 +159,6 @@ experiments-dataset: ## Run experiments with different combinations of datasets
 tune-batch-size: ## find optimal batch_size such that doesn't cause out of memory exception
 	python src/tune.py ++trainer.auto_scale_batch_size='power'
 
-
 tune-learning-rate: ## find optimal batch_size such that doesn't cause out of memory exception
 	python src/tune.py ++trainer.auto_lr_find=True
 

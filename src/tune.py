@@ -24,7 +24,7 @@ log = utils.get_pylogger(__name__)
 
 
 @utils.task_wrapper
-def train(cfg: DictConfig) -> Tuple[dict, dict]:
+def tune(cfg: DictConfig) -> Tuple[dict, dict]:
     if cfg.get("seed"):
         pl.seed_everything(cfg.seed, workers=True)
     logging.getLogger("PIL").setLevel(logging.WARNING)
@@ -94,7 +94,7 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
 def main(cfg: DictConfig) -> Optional[float]:
 
     # train the model
-    metric_dict, _ = train(cfg)
+    metric_dict, _ = tune(cfg)
 
     # safely retrieve metric value for hydra-based hyperparameter optimization
     metric_value = utils.get_metric_value(
