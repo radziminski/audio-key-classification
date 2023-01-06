@@ -1,5 +1,6 @@
 import torchvision.datasets
 import torch
+import torchvision.transforms as transforms
 
 
 class TorchDatasetFolder(torchvision.datasets.DatasetFolder):
@@ -18,9 +19,11 @@ class TorchDatasetFolder(torchvision.datasets.DatasetFolder):
             with open(path, "rb") as file:
                 return torch.load(file).float()
 
+        normalize_transform = transforms.Normalize((0.78,), (0.65,))
+
         super(TorchDatasetFolder, self).__init__(
             root_dir,
             loader=loader,
             extensions=(".pt"),
-            transform=transform,
+            transform=transform if transform is not None else normalize_transform,
         )
