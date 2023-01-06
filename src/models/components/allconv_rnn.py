@@ -100,8 +100,10 @@ class AllConvRnn(nn.Module):
 
         # Classify
         x = self.bn9(x)
+        x = F.dropout(x, p=self.dropout_rate)
+
         x = self.fc(x)
-        x = F.relu(x)
+        x = F.elu(x)
 
         # x = F.dropout(x, p=self.dropout_rate)
 
