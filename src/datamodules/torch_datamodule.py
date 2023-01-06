@@ -130,13 +130,13 @@ class TorchDataModule(GenericDatamodule):
         return mean, std
 
     def print_train_mean_std(self):
-        mean, std = self._get_mean_std(self.train_dataloader)
+        mean, std = self._get_mean_std(self.train_dataloader())
         print(f"Train mean={mean}; std={std};")
 
     def print_val_mean_std(self):
-        mean, std = self._get_mean_std(self.val_dataloader)
+        mean, std = self._get_mean_std(self.val_dataloader())
         print(f"Val mean={mean}; std={std};")
 
     def print_test_mean_std(self):
-        mean, std = self._get_mean_std(self.test_dataloader)
+        mean, std = self._get_mean_std(self.test_dataloader())
         print(f"Test mean={mean}; std={std};")
