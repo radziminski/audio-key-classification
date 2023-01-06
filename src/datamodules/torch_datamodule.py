@@ -114,24 +114,32 @@ class TorchDataModule(GenericDatamodule):
 
                     for index, interval in enumerate(intervals):
                         if len(interval) == interval_samples:
-                            self.transform_and_save(destination_path, index, interval)
-                            if not self.is_test_dir(root):
-                                self.augment_interval(
-                                    augmentations, destination_path, index, interval
+                            try:
+                                self.transform_and_save(
+                                    destination_path, index, interval
                                 )
+                                if not self.is_test_dir(root):
+                                    self.augment_interval(
+                                        augmentations, destination_path, index, interval
+                                    )
+                            except:
+                                continue
 
     def augment_interval(self, augmentations, destination_path, index, interval):
         for a_index, augmentation in enumerate(augmentations):
-            augment = Compose([augmentation]).to(self.device)
-            interval = augment(interval.float())
-            self.transform_and_save(
-                destination_path + str(100 + a_index), index, interval
-            )
+            a_destination_path = destination_path + str(100 + a_index)
+            if not os.path.exists(f"{a_destination_path}_{index}.pt"):
+                augment = Compose([augmentation]).to(self.device)
+                interval = augment(interval.float())
+                self.transform_and_save(
+                    destination_path + str(100 + a_index), index, interval
+                )
 
     def transform_and_save(self, destination_path, index, interval):
-        spectrogram = self.transform.to(self.device)(interval.float())
-        interval_destination_path = f"{destination_path}_{index}.pt"
-        torch.save(spectrogram.clone(), interval_destination_path)
+        if not os.path.exists(f"{destination_path}_{index}.pt"):
+            spectrogram = self.transform.to(self.device)(interval.float())
+            interval_destination_path = f"{destination_path}_{index}.pt"
+            torch.save(spectrogram.clone(), interval_destination_path)
 
     @staticmethod
     def format_augmentation_name(augmentation_raw_name):
