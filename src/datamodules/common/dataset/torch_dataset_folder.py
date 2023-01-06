@@ -17,7 +17,12 @@ class TorchDatasetFolder(torchvision.datasets.DatasetFolder):
 
         def loader(path):
             with open(path, "rb") as file:
-                return torch.load(file).float()
+                try:
+                    tensor = torch.load(file).float()
+                    return tensor
+                except:
+                    print("ERROR LOADING:")
+                    print(path)
 
         normalize_transform = transforms.Normalize((0.78,), (0.65,))
 
