@@ -2,7 +2,7 @@ _target_: src.models.key_classifier.KeyClassifier
 learning_rate: 0.001
 
 defaults:
-  - criterion: mirex_v0 # or v1 or v2 or cross_entropy
+  - criterion: cross_entropy # or v1 or v2 or cross_entropy
   - model: allconv # or allconv or allconv_rnn or cqt_allconv_rnn
 
 optimizer:
