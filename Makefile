@@ -71,12 +71,20 @@ create-tensors: ## Download and prepare datasets with mp3 audio files
 	python src/scripts/create_tensors.py \
 		datamodule.audio.transform=None
 
-prepare-tensors: ## Download and prepare datasets with mp3 audio files
+prepare-audio-create-tensors: ## Download and prepare datasets with mp3 audio files
 	python src/scripts/create_tensors.py \
 		datamodule.audio.preparers.ncs_preparer.download=True \
 		datamodule.audio.preparers.gs_mtg_preparer.download=True \
 		datamodule.audio.preparers.gs_key_preparer.download=True \
 		datamodule.audio.transform=None
+
+prepare-tensors:
+	python src/scripts/prepare_tensors.py \
+		datamodule.torch.download=True
+
+process-tensors:
+	python src/scripts/prepare_tensors.py \
+		datamodule.torch.process=True
 
 eval: ## Default eval (on song fragments)
 	python src/eval.py

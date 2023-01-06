@@ -6,6 +6,23 @@ import torch
 from torch_audiomentations import Compose
 import re
 
+notes_order = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
+
+
+def get_note(current_note, offset):
+    index = notes_order.index(current_note)
+    index = index + offset
+
+    if index >= len(notes_order):
+        index -= len(notes_order)
+        return notes_order[index]
+
+    if index < 0:
+        index = len(notes_order) + index
+        return notes_order[index]
+
+    return notes_order[index]
+
 
 class TorchDataModule(GenericDatamodule):
     def __init__(
@@ -106,6 +123,7 @@ class TorchDataModule(GenericDatamodule):
                 if file.endswith(".pt"):
                     source_path = os.path.join(root, file)
                     destination_path = os.path.join(destination_dir, str(index))
+                    dataset_destination, key = os.path.split(destination_dir)
 
                     audio = torch.load(source_path).to(self.device)
                     intervals = torch.split(
@@ -120,14 +138,37 @@ class TorchDataModule(GenericDatamodule):
                                 )
                                 if not self.is_test_dir(root):
                                     self.augment_interval(
-                                        augmentations, destination_path, index, interval
+                                        augmentations,
+                                        destination_path,
+                                        index,
+                                        interval,
+                                        key,
                                     )
                             except:
                                 continue
 
-    def augment_interval(self, augmentations, destination_path, index, interval):
+    def augment_interval(self, augmentations, destination_path, index, interval, key):
+        key_note = key[:2] if key[1] == "b" else key[0]
+        key_scale = key[2:] if key[1] == "b" else key[1:]
+
         for a_index, augmentation in enumerate(augmentations):
+            offset = int(augmentation.n_steps)
+            new_note = get_note(key_note, offset)
+            new_key = new_note + key_scale
+            print("")
+            print(f"Offset: {offset}, old_note:{key_note}")
+            print(f"Old key: {key}")
+            print(f"New key: {new_key}")
             a_destination_path = destination_path + str(100 + a_index)
+            a_destination_path = a_destination_path.replace(key, new_key)
+            print(f"Old dest: {destination_path}")
+            print(f"New dest: {a_destination_path}")
+
+            destination_dir, _ = os.path.split(a_destination_path)
+
+            if not os.path.exists(destination_dir):
+                os.makedirs(destination_dir)
+
             if not os.path.exists(f"{a_destination_path}_{index}.pt"):
                 augment = Compose([augmentation]).to(self.device)
                 interval = augment(interval.float())
