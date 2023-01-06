@@ -31,7 +31,7 @@ class TorchDataModule(GenericDatamodule):
         sr=44100,
         transform=None,
         device="gpu",
-        augmentations=[]
+        augmentations=[],
     ):
         super().__init__(
             batch_size,
@@ -116,29 +116,30 @@ class TorchDataModule(GenericDatamodule):
                         if len(interval) == interval_samples:
                             self.transform_and_save(destination_path, index, interval)
                             if not self.is_test_dir(root):
-                                self.augment_interval(augmentations, destination_path, index, interval)
+                                self.augment_interval(
+                                    augmentations, destination_path, index, interval
+                                )
 
     def augment_interval(self, augmentations, destination_path, index, interval):
-        for augmentation in augmentations:
-            augment = Compose([augmentation])
-            interval_reshaped = torch.reshape(interval.float(), (1, 1, -1))
-            interval = augment(interval_reshaped)
-            self.transform_and_save(destination_path + self.format_augmentation_name(str(augmentation)), index, interval)
+        for a_index, augmentation in enumerate(augmentations):
+            augment = Compose([augmentation]).to(self.device)
+            interval = augment(interval.float())
+            self.transform_and_save(
+                destination_path + str(100 + a_index), index, interval
+            )
 
     def transform_and_save(self, destination_path, index, interval):
-        spectrogram = self.transform.to(self.device)(
-            interval.float()
-        )
+        spectrogram = self.transform.to(self.device)(interval.float())
         interval_destination_path = f"{destination_path}_{index}.pt"
         torch.save(spectrogram.clone(), interval_destination_path)
 
     @staticmethod
     def format_augmentation_name(augmentation_raw_name):
-        return re.sub(r'[^a-zA-Z0-9]', '', augmentation_raw_name).lower()
+        return re.sub(r"[^a-zA-Z0-9]", "", augmentation_raw_name).lower()
 
     @staticmethod
     def is_test_dir(root):
-        test_dirs = ['gs_key', 'ncs/validation']
+        test_dirs = ["gs_key", "ncs/validation"]
         for directory in test_dirs:
             if directory in root:
                 return True

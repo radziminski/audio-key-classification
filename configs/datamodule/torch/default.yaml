@@ -38,9 +38,12 @@ defaults:
       - gs_mtg_dataset
 
 augmentations:
-  -
-    _target_: torch_audiomentations.augmentations.pitch_shift.PitchShift
-    min_transpose_semitones: -4
-    max_transpose_semitones: 4
-    p: 0.5
-    sample_rate: 16000
+  - _target_: torchaudio.transforms.PitchShift
+    n_steps: 1
+    sample_rate: 44100
+  - _target_: torchaudio.transforms.PitchShift
+    n_steps: -1
+    sample_rate: 44100
+  - _target_: torchaudio.transforms.PitchShift
+    n_steps: 4
+    sample_rate: 44100
