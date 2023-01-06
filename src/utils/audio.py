@@ -259,6 +259,6 @@ def save_mp3_to_tensor(
         audio = resample(audio, sr, target_sr, device)
 
     audio = audio.clone()
-    audio = audio.to(torch.float16)
+    # audio = audio.to(torch.float16)
 
     torch.save(audio, destination_filename)
