@@ -52,7 +52,7 @@ prepare-gs-key-audio: ## Download and prepare GS KEY dataset
 		datamodule.audio.preparers.gs_key_preparer.split=True
 
 prepare-images: ## Download images with precomputed spectrograms for each dataset
-	python src/scripts/prepare_images.py \
+	mkdir -p data/audio/images && python src/scripts/prepare_images.py \
 	datamodule.image.download=True
 
 create-spectrograms: ## Create and save spectrogram images from existing audio files in all datasets
@@ -154,6 +154,15 @@ experiments-hparams: ## Run experiments for hyperparams tuning
 
 experiments-dataset: ## Run experiments with different combinations of datasets
 	scripts/experiments_nf.sh
+
+experiments-fine-tuned: ## Run experiments with different combinations of datasets
+	scripts/experiments_fine_tuned.sh
+
+tune-batch-size: ## find optimal batch_size such that doesn't cause out of memory exception
+	python src/tune.py ++trainer.auto_scale_batch_size='power'
+
+tune-learning-rate: ## find optimal batch_size such that doesn't cause out of memory exception
+	python src/tune.py ++trainer.auto_lr_find=True
 
 debug: ## Enter debugging mode with pdb
 	#

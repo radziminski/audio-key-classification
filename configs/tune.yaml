@@ -1,0 +1,27 @@
+defaults:
+  - _self_
+  - datamodule: default.yaml
+  - model: key.yaml
+  - callbacks: default.yaml
+  - logger: many_loggers.yaml
+  - trainer: gpu.yaml
+  - paths: default.yaml
+  - extras: default.yaml
+  - hydra: default.yaml
+  - constants: default.yaml
+
+  - experiment: null
+  - hparams_search: null
+
+  - optional local: default.yaml
+
+  - debug: null
+
+task_name: 'tune'
+tags: ['dev']
+experiment_name: ''
+train: True
+test: True
+ckpt_path: null
+seed: 123456
+datamodule_type: 'image'
