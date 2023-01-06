@@ -20,4 +20,4 @@ tags: ['dev']
 ckpt_path: ${paths.root_dir}/checkpoints/best.ckpt
 
 # Chooses audio or image datamodules
-datamodule_type: 'image' # 'audio' or 'image'
+datamodule_type: 'tensor' # 'audio' or 'image'
