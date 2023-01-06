@@ -20,6 +20,9 @@ def main(cfg: DictConfig) -> None:
     dm = hydra.utils.instantiate(cfg.datamodule.torch)
     dm.prepare_data()
     dm.setup()
+    dm.print_train_mean_std()
+    dm.print_val_mean_std()
+    dm.print_test_mean_std()
 
 
 if __name__ == "__main__":

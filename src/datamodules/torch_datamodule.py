@@ -116,3 +116,27 @@ class TorchDataModule(GenericDatamodule):
 
                             interval_destination_path = f"{destination_path}_{index}.pt"
                             torch.save(spectrogram.clone(), interval_destination_path)
+
+    def _get_mean_std(self, loader):
+        channels_sum, channels_squared_sum, num_batches = 0, 0, 0
+
+        for data, _ in loader:
+            channels_sum += torch.mean(data, dim=[0, 2, 3])
+            channels_squared_sum += torch.mean(data**2, dim=[0, 2, 3])
+            num_batches += 1
+
+        mean = channels_sum / num_batches
+        std = (channels_squared_sum / num_batches - mean * 2) * 0.5
+        return mean, std
+
+    def print_train_mean_std(self):
+        mean, std = self._get_mean_std(self.train_dataloader)
+        print(f"Train mean={mean}; std={std};")
+
+    def print_val_mean_std(self):
+        mean, std = self._get_mean_std(self.val_dataloader)
+        print(f"Val mean={mean}; std={std};")
+
+    def print_test_mean_std(self):
+        mean, std = self._get_mean_std(self.test_dataloader)
+        print(f"Test mean={mean}; std={std};")
