@@ -16,7 +16,7 @@ model_checkpoint:
 
 early_stopping:
   monitor: 'val/mirex'
-  patience: 4
+  patience: 5
   mode: 'max'
   min_delta: 0.01
   verbose: True
