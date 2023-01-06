@@ -155,14 +155,8 @@ class TorchDataModule(GenericDatamodule):
             offset = int(augmentation.n_steps)
             new_note = get_note(key_note, offset)
             new_key = new_note + key_scale
-            print("")
-            print(f"Offset: {offset}, old_note:{key_note}")
-            print(f"Old key: {key}")
-            print(f"New key: {new_key}")
             a_destination_path = destination_path + str(100 + a_index)
             a_destination_path = a_destination_path.replace(key, new_key)
-            print(f"Old dest: {destination_path}")
-            print(f"New dest: {a_destination_path}")
 
             destination_dir, _ = os.path.split(a_destination_path)
 
