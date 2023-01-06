@@ -13,6 +13,7 @@ hydra-colorlog==1.2.0
 audiofile==1.1.0
 pydub==0.25.1
 nnAudio==0.3.2
+torch-audiomentations
 
 # --------- loggers --------- #
 wandb

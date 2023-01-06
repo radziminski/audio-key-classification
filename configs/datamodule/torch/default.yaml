@@ -36,3 +36,11 @@ defaults:
   - train_datasets:
       - ncs_train_dataset
       - gs_mtg_dataset
+
+augmentations:
+  -
+    _target_: torch_audiomentations.augmentations.pitch_shift.PitchShift
+    min_transpose_semitones: -4
+    max_transpose_semitones: 4
+    p: 0.5
+    sample_rate: 16000

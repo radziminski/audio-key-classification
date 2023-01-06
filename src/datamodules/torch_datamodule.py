@@ -3,6 +3,8 @@ import os
 from src.datamodules.common.generic_datamodule import GenericDatamodule
 from src.utils.download import download_and_unzip_parts
 import torch
+from torch_audiomentations import Compose
+import re
 
 
 class TorchDataModule(GenericDatamodule):
@@ -29,6 +31,7 @@ class TorchDataModule(GenericDatamodule):
         sr=44100,
         transform=None,
         device="gpu",
+        augmentations=[]
     ):
         super().__init__(
             batch_size,
@@ -82,6 +85,7 @@ class TorchDataModule(GenericDatamodule):
         )
 
     def _process_data(self):
+        augmentations = self.hparams.augmentations
         interval_samples = self.hparams.interval_length * self.hparams.sr
 
         if not os.path.exists(self.hparams.torch_dir_processed):
@@ -110,12 +114,35 @@ class TorchDataModule(GenericDatamodule):
 
                     for index, interval in enumerate(intervals):
                         if len(interval) == interval_samples:
-                            spectrogram = self.transform.to(self.device)(
-                                interval.float()
-                            )
+                            self.transform_and_save(destination_path, index, interval)
+                            if not self.is_test_dir(root):
+                                self.augment_interval(augmentations, destination_path, index, interval)
 
-                            interval_destination_path = f"{destination_path}_{index}.pt"
-                            torch.save(spectrogram.clone(), interval_destination_path)
+    def augment_interval(self, augmentations, destination_path, index, interval):
+        for augmentation in augmentations:
+            augment = Compose([augmentation])
+            interval_reshaped = torch.reshape(interval.float(), (1, 1, -1))
+            interval = augment(interval_reshaped)
+            self.transform_and_save(destination_path + self.format_augmentation_name(str(augmentation)), index, interval)
+
+    def transform_and_save(self, destination_path, index, interval):
+        spectrogram = self.transform.to(self.device)(
+            interval.float()
+        )
+        interval_destination_path = f"{destination_path}_{index}.pt"
+        torch.save(spectrogram.clone(), interval_destination_path)
+
+    @staticmethod
+    def format_augmentation_name(augmentation_raw_name):
+        return re.sub(r'[^a-zA-Z0-9]', '', augmentation_raw_name).lower()
+
+    @staticmethod
+    def is_test_dir(root):
+        test_dirs = ['gs_key', 'ncs/validation']
+        for directory in test_dirs:
+            if directory in root:
+                return True
+        return False
 
     def _get_mean_std(self, loader):
         channels_sum, channels_squared_sum, num_batches = 0, 0, 0
