@@ -1,6 +1,7 @@
 # Audio Key Classification
 
 Project with full setup for training a deep-learning model for music key classification of a given audio file.
+The results of the training can be found on Weights & Biases platform: https://wandb.ai/radziminski/audio-key-classification
 
 ## Usage
 
